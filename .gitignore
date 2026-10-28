@@ -36,3 +36,11 @@ Desktop.ini
 *.keystore
 *.jks
 # Preserve Assets, all .meta files, Packages and ProjectSettings.
+
+# Automatically updated local development status files
+/TidePool/Development/unity_hall_expansion/dream-status.json
+/TidePool/Development/unity_monument/status.txt
+/TidePool/Development/unity_pool_lighting/status.txt
+/TidePool/Development/unity_water_cycle/camera-status.txt
+/TidePool/Development/unity_water_cycle/letter-status.json
+/TidePool/Development/unity_water_cycle/status.json

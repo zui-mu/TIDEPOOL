@@ -1,0 +1,1 @@
+2026-10-23T09:22:54 PASS: bright opening and draining, real letter pickup, 4s/8s reading transition, 12s fill fade, 24s cyan, identical final lamp intensities, reset.

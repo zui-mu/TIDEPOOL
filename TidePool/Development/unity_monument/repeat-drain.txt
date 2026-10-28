@@ -1,0 +1,7 @@
+2026-10-22T19:47:38 shaders idle
+2026-10-22T19:47:58 round=0 empty height=-3.35 camera=(-3.00, 2.10, -4.00) shaders=False
+2026-10-22T19:48:09 round=1 empty height=-3.35 camera=(-3.00, 2.10, -4.00) shaders=False
+2026-10-22T19:48:19 round=2 empty height=-3.35 camera=(-3.00, 2.10, -4.00) shaders=False
+2026-10-22T19:48:30 round=3 empty height=-3.35 camera=(-3.00, 2.10, -4.00) shaders=False
+2026-10-22T19:48:40 round=4 empty height=-3.35 camera=(-3.00, 2.10, -4.00) shaders=False
+PASS five real-time drains; inspect screenshots for rendering

@@ -1,0 +1,3 @@
+System.InvalidOperationException: Exit Play before adjusting the saved scene.
+  at PoolHallExpansionEditor.Polish () [0x00160] in E:\jianmowenjian\unityproject\TIDEPOOL\TidePool\Assets\_Game\Editor\PoolHallExpansionEditor.cs:114 
+  at PoolHallExpansionEditor.PollLocalCommand () [0x00056] in E:\jianmowenjian\unityproject\TIDEPOOL\TidePool\Assets\_Game\Editor\PoolHallExpansionEditor.cs:40 

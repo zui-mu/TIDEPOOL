@@ -1,0 +1,38 @@
+# Unity generated folders (the Unity project lives in TidePool/)
+/TidePool/[Ll]ibrary/
+/TidePool/[Tt]emp/
+/TidePool/[Oo]bj/
+/TidePool/[Ll]ogs/
+/TidePool/[Uu]ser[Ss]ettings/
+/TidePool/[Bb]uild/
+/TidePool/[Bb]uilds/
+/TidePool/MemoryCaptures/
+/TidePool/Recordings/
+# IDE generated files
+.vs/
+.idea/
+*.csproj
+*.sln
+*.slnx
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.opendb
+*.VC.db
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+# Local credentials and configuration
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pfx
+*.p12
+*.keystore
+*.jks
+# Preserve Assets, all .meta files, Packages and ProjectSettings.

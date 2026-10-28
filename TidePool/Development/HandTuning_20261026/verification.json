@@ -1,0 +1,9 @@
+{
+  "Status": "pass",
+  "ExistingHandObjectsOnly": true,
+  "RuntimeSourcesUnchanged": true,
+  "GripSettingsPreserved": true,
+  "OutsideHandTransformsUnchanged": true,
+  "GripChecks": 12,
+  "Backup": "Assets/_Recovery/HandTune_Before_20261026_144722.unity"
+}

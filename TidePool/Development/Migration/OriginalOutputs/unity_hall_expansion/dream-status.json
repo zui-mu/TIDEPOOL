@@ -1,0 +1,20 @@
+{
+    "scene": "Assets/_Game/Scenes/PoolHall_Monument_01.unity",
+    "time": "2026-10-23T09:15:46",
+    "playing": false,
+    "baking": false,
+    "followEnabled": true,
+    "lightmapCount": 0,
+    "progress": 0.0,
+    "orbitPitch": 0.0,
+    "cameraPosition": {
+        "x": 0.0,
+        "y": 2.299999952316284,
+        "z": -7.800000190734863
+    },
+    "cameraAngles": {
+        "x": 357.0,
+        "y": 0.0,
+        "z": 0.0
+    }
+}

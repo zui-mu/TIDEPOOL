@@ -1,0 +1,6 @@
+Water (under) parent=Renderers material=WaterUnder bounds=Center: (0.00, 0.00, 0.00), Extents: (500.00, 500.00, 500.00)
+God Rays parent=Renderers material=GodRays bounds=Center: (0.00, 0.00, 0.00), Extents: (500.00, 500.00, 500.00)
+Water (above) parent=Renderers material=WaterAbove bounds=Center: (0.00, 0.00, 0.00), Extents: (500.00, 500.00, 500.00)
+Side_Aisle_Roof parent=Dream_Architecture material=M_ColdPlaster bounds=Center: (-16.93, 6.80, 16.00), Extents: (3.43, 0.20, 26.20)
+West_Plaster parent=Dream_Architecture material=M_ColdPlaster bounds=Center: (-20.25, 9.00, 16.00), Extents: (0.25, 9.00, 26.25)
+pipeline=PC_RPAsset cameraRenderer=UniversalRenderer

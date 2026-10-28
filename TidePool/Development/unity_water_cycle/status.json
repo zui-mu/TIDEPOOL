@@ -1,0 +1,20 @@
+{
+    "scene": "Assets/_Game/Scenes/PoolHall_ArmLab_01.unity",
+    "time": "2026-10-28T17:01:55",
+    "phase": "Pool",
+    "playing": false,
+    "waterHeight": -0.30000001192092898,
+    "elapsed": 0.0,
+    "player": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": -1.7999999523162842
+    },
+    "camera": {
+        "x": 0.0,
+        "y": 2.299999952316284,
+        "z": -7.800000190734863
+    },
+    "testStage": 0,
+    "lightmaps": 0
+}

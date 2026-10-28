@@ -1,0 +1,16 @@
+PASS
+Console starts drain
+Drain completes and exposes letter
+Pool-floor letter starts flood
+Escape route makes forward progress
+Actual capsule climbed pool stairs and reached dry deck
+Walk plus 8 seconds reading fits before head-height flooding
+New roof produces airborne seepage
+Overflow removes pool-edge wetness boundary
+Full hall flood reaches 24.5m
+No leaking animation below final water
+Deep blue atmosphere remains linked to flood
+Dry camera guard follows relocated pocket
+Reset clears seepage and atmosphere
+Route distance=65.46246m; walk estimate=21.82082s
+2026-10-22T20:07:46

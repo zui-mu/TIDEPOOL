@@ -1,0 +1,1 @@
+2026-10-22T22:37:08 light transition, local scatter, full flood and reset passed. Review screenshots for visual quality.

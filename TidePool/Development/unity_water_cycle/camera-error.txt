@@ -1,0 +1,3 @@
+System.NullReferenceException: Object reference not set to an instance of an object
+  at HallCameraFixEditor.Test () [0x006ef] in E:\jianmowenjian\unityproject\TIDEPOOL\TidePool\Assets\_Game\Editor\HallCameraFixEditor.cs:203 
+  at HallCameraFixEditor.Tick () [0x0021d] in E:\jianmowenjian\unityproject\TIDEPOOL\TidePool\Assets\_Game\Editor\HallCameraFixEditor.cs:62 

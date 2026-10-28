@@ -1,0 +1,11 @@
+{
+  "low_water_reached": true,
+  "drying_reaches_zero": true,
+  "high_water_restored": true,
+  "wetness_restored": true,
+  "missing_scripts": 0,
+  "native_keyboard_test": "not verified; input automation was not received by the Game view",
+  "Park_Entrance_01.unity_unchanged": true,
+  "SG_WetTiles.shadergraph_unchanged": true,
+  "M_WetTiles.mat_unchanged": true
+}

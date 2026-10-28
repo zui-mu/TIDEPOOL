@@ -1,0 +1,394 @@
+Camera clear at case 0: 
+Camera stays in the revised hall
+Camera clear at case 1: 
+Camera stays in the revised hall
+Camera clear at case 2: 
+Camera stays in the revised hall
+Camera clear at case 3: 
+Camera stays in the revised hall
+Camera clear at case 4: 
+Camera stays in the revised hall
+Camera clear at case 5: 
+Camera stays in the revised hall
+Camera clear at case 6: 
+Camera stays in the revised hall
+Camera clear at case 7: 
+Camera stays in the revised hall
+Camera clear at case 8: 
+Camera stays in the revised hall
+Camera clear at case 9: 
+Camera stays in the revised hall
+Camera clear at case 10: 
+Camera stays in the revised hall
+Camera clear at case 11: 
+Camera stays in the revised hall
+Camera clear at case 12: 
+Camera stays in the revised hall
+Camera clear at case 13: 
+Camera stays in the revised hall
+Camera clear at case 14: 
+Camera stays in the revised hall
+Camera clear at case 15: 
+Camera stays in the revised hall
+Camera clear at case 16: 
+Camera stays in the revised hall
+Camera clear at case 17: 
+Camera stays in the revised hall
+Camera clear at case 18: 
+Camera stays in the revised hall
+Camera clear at case 19: 
+Camera stays in the revised hall
+Camera clear at case 20: 
+Camera stays in the revised hall
+Camera clear at case 21: 
+Camera stays in the revised hall
+Camera clear at case 22: 
+Camera stays in the revised hall
+Camera clear at case 23: 
+Camera stays in the revised hall
+Camera clear at case 24: 
+Camera stays in the revised hall
+Camera clear at case 25: 
+Camera stays in the revised hall
+Camera clear at case 26: 
+Camera stays in the revised hall
+Camera clear at case 27: 
+Camera stays in the revised hall
+Camera clear at case 28: 
+Camera stays in the revised hall
+Camera clear at case 29: 
+Camera stays in the revised hall
+Camera clear at case 30: 
+Camera stays in the revised hall
+Camera clear at case 31: 
+Camera stays in the revised hall
+Camera clear at case 32: 
+Camera stays in the revised hall
+Camera clear at case 33: 
+Camera stays in the revised hall
+Camera clear at case 34: 
+Camera stays in the revised hall
+Camera clear at case 35: 
+Camera stays in the revised hall
+Camera clear at case 36: 
+Camera stays in the revised hall
+Camera clear at case 37: 
+Camera stays in the revised hall
+Camera clear at case 38: 
+Camera stays in the revised hall
+Camera clear at case 39: 
+Camera stays in the revised hall
+Camera clear at case 40: 
+Camera stays in the revised hall
+Camera clear at case 41: 
+Camera stays in the revised hall
+Camera clear at case 42: 
+Camera stays in the revised hall
+Camera clear at case 43: 
+Camera stays in the revised hall
+Camera clear at case 44: 
+Camera stays in the revised hall
+Camera clear at case 45: 
+Camera stays in the revised hall
+Camera clear at case 46: 
+Camera stays in the revised hall
+Camera clear at case 47: 
+Camera stays in the revised hall
+Camera clear at case 48: 
+Camera stays in the revised hall
+Camera clear at case 49: 
+Camera stays in the revised hall
+Camera clear at case 50: 
+Camera stays in the revised hall
+Camera clear at case 51: 
+Camera stays in the revised hall
+Camera clear at case 52: 
+Camera stays in the revised hall
+Camera clear at case 53: 
+Camera stays in the revised hall
+Camera clear at case 54: 
+Camera stays in the revised hall
+Camera clear at case 55: 
+Camera stays in the revised hall
+Camera clear at case 56: 
+Camera stays in the revised hall
+Camera clear at case 57: 
+Camera stays in the revised hall
+Camera clear at case 58: 
+Camera stays in the revised hall
+Camera clear at case 59: 
+Camera stays in the revised hall
+Camera clear at case 60: 
+Camera stays in the revised hall
+Camera clear at case 61: 
+Camera stays in the revised hall
+Camera clear at case 62: 
+Camera stays in the revised hall
+Camera clear at case 63: 
+Camera stays in the revised hall
+Camera clear at case 64: 
+Camera stays in the revised hall
+Camera clear at case 65: 
+Camera stays in the revised hall
+Camera clear at case 66: 
+Camera stays in the revised hall
+Camera clear at case 67: 
+Camera stays in the revised hall
+Camera clear at case 68: 
+Camera stays in the revised hall
+Camera clear at case 69: 
+Camera stays in the revised hall
+Camera clear at case 70: 
+Camera stays in the revised hall
+Camera clear at case 71: 
+Camera stays in the revised hall
+Camera clear at case 72: 
+Camera stays in the revised hall
+Camera clear at case 73: 
+Camera stays in the revised hall
+Camera clear at case 74: 
+Camera stays in the revised hall
+Camera clear at case 75: 
+Camera stays in the revised hall
+Camera clear at case 76: 
+Camera stays in the revised hall
+Camera clear at case 77: 
+Camera stays in the revised hall
+Camera clear at case 78: 
+Camera stays in the revised hall
+Camera clear at case 79: 
+Camera stays in the revised hall
+Camera clear at case 80: 
+Camera stays in the revised hall
+Camera clear at case 81: 
+Camera stays in the revised hall
+Camera clear at case 82: 
+Camera stays in the revised hall
+Camera clear at case 83: 
+Camera stays in the revised hall
+Camera clear at case 84: 
+Camera stays in the revised hall
+Camera clear at case 85: 
+Camera stays in the revised hall
+Camera clear at case 86: 
+Camera stays in the revised hall
+Camera clear at case 87: 
+Camera stays in the revised hall
+Camera clear at case 88: 
+Camera stays in the revised hall
+Camera clear at case 89: 
+Camera stays in the revised hall
+Camera clear at case 90: 
+Camera stays in the revised hall
+Camera clear at case 91: 
+Camera stays in the revised hall
+Camera clear at case 92: 
+Camera stays in the revised hall
+Camera clear at case 93: 
+Camera stays in the revised hall
+Camera clear at case 94: 
+Camera stays in the revised hall
+Camera clear at case 95: 
+Camera stays in the revised hall
+Camera clear at case 96: 
+Camera stays in the revised hall
+Camera clear at case 97: 
+Camera stays in the revised hall
+Camera clear at case 98: 
+Camera stays in the revised hall
+Camera clear at case 99: 
+Camera stays in the revised hall
+Camera clear at case 100: 
+Camera stays in the revised hall
+Camera clear at case 101: 
+Camera stays in the revised hall
+Camera clear at case 102: 
+Camera stays in the revised hall
+Camera clear at case 103: 
+Camera stays in the revised hall
+Camera clear at case 104: 
+Camera stays in the revised hall
+Camera clear at case 105: 
+Camera stays in the revised hall
+Camera clear at case 106: 
+Camera stays in the revised hall
+Camera clear at case 107: 
+Camera stays in the revised hall
+Camera clear at case 108: 
+Camera stays in the revised hall
+Camera clear at case 109: 
+Camera stays in the revised hall
+Camera clear at case 110: 
+Camera stays in the revised hall
+Camera clear at case 111: 
+Camera stays in the revised hall
+Camera clear at case 112: 
+Camera stays in the revised hall
+Camera clear at case 113: 
+Camera stays in the revised hall
+Camera clear at case 114: 
+Camera stays in the revised hall
+Camera clear at case 115: 
+Camera stays in the revised hall
+Camera clear at case 116: 
+Camera stays in the revised hall
+Camera clear at case 117: 
+Camera stays in the revised hall
+Camera clear at case 118: 
+Camera stays in the revised hall
+Camera clear at case 119: 
+Camera stays in the revised hall
+Camera clear at case 120: 
+Camera stays in the revised hall
+Camera clear at case 121: 
+Camera stays in the revised hall
+Camera clear at case 122: 
+Camera stays in the revised hall
+Camera clear at case 123: 
+Camera stays in the revised hall
+Camera clear at case 124: 
+Camera stays in the revised hall
+Camera clear at case 125: 
+Camera stays in the revised hall
+Camera clear at case 126: 
+Camera stays in the revised hall
+Camera clear at case 127: 
+Camera stays in the revised hall
+Camera clear at case 128: 
+Camera stays in the revised hall
+Camera clear at case 129: 
+Camera stays in the revised hall
+Camera clear at case 130: 
+Camera stays in the revised hall
+Camera clear at case 131: 
+Camera stays in the revised hall
+Camera clear at case 132: 
+Camera stays in the revised hall
+Camera clear at case 133: 
+Camera stays in the revised hall
+Camera clear at case 134: 
+Camera stays in the revised hall
+Camera clear at case 135: 
+Camera stays in the revised hall
+Camera clear at case 136: 
+Camera stays in the revised hall
+Camera clear at case 137: 
+Camera stays in the revised hall
+Camera clear at case 138: 
+Camera stays in the revised hall
+Camera clear at case 139: 
+Camera stays in the revised hall
+Camera clear at case 140: 
+Camera stays in the revised hall
+Camera clear at case 141: 
+Camera stays in the revised hall
+Camera clear at case 142: 
+Camera stays in the revised hall
+Camera clear at case 143: 
+Camera stays in the revised hall
+Camera clear at case 144: 
+Camera stays in the revised hall
+Camera clear at case 145: 
+Camera stays in the revised hall
+Camera clear at case 146: 
+Camera stays in the revised hall
+Camera clear at case 147: 
+Camera stays in the revised hall
+Camera clear at case 148: 
+Camera stays in the revised hall
+Camera clear at case 149: 
+Camera stays in the revised hall
+Camera clear at case 150: 
+Camera stays in the revised hall
+Camera clear at case 151: 
+Camera stays in the revised hall
+Camera clear at case 152: 
+Camera stays in the revised hall
+Camera clear at case 153: 
+Camera stays in the revised hall
+Camera clear at case 154: 
+Camera stays in the revised hall
+Camera clear at case 155: 
+Camera stays in the revised hall
+Camera clear at case 156: 
+Camera stays in the revised hall
+Camera clear at case 157: 
+Camera stays in the revised hall
+Camera clear at case 158: 
+Camera stays in the revised hall
+Camera clear at case 159: 
+Camera stays in the revised hall
+Camera clear at case 160: 
+Camera stays in the revised hall
+Camera clear at case 161: 
+Camera stays in the revised hall
+Camera clear at case 162: 
+Camera stays in the revised hall
+Camera clear at case 163: 
+Camera stays in the revised hall
+Camera clear at case 164: 
+Camera stays in the revised hall
+Camera clear at case 165: 
+Camera stays in the revised hall
+Camera clear at case 166: 
+Camera stays in the revised hall
+Camera clear at case 167: 
+Camera stays in the revised hall
+Camera clear at case 168: 
+Camera stays in the revised hall
+Camera clear at case 169: 
+Camera stays in the revised hall
+Camera clear at case 170: 
+Camera stays in the revised hall
+Camera clear at case 171: 
+Camera stays in the revised hall
+Camera clear at case 172: 
+Camera stays in the revised hall
+Camera clear at case 173: 
+Camera stays in the revised hall
+Camera clear at case 174: 
+Camera stays in the revised hall
+Camera clear at case 175: 
+Camera stays in the revised hall
+Camera clear at case 176: 
+Camera stays in the revised hall
+Camera clear at case 177: 
+Camera stays in the revised hall
+Camera clear at case 178: 
+Camera stays in the revised hall
+Camera clear at case 179: 
+Camera stays in the revised hall
+Camera clear at case 180: 
+Camera stays in the revised hall
+Camera clear at case 181: 
+Camera stays in the revised hall
+Camera clear at case 182: 
+Camera stays in the revised hall
+Camera clear at case 183: 
+Camera stays in the revised hall
+Camera clear at case 184: 
+Camera stays in the revised hall
+Camera clear at case 185: 
+Camera stays in the revised hall
+Camera clear at case 186: 
+Camera stays in the revised hall
+Camera clear at case 187: 
+Camera stays in the revised hall
+Camera clear at case 188: 
+Camera stays in the revised hall
+Camera clear at case 189: 
+Camera stays in the revised hall
+Camera clear at case 190: 
+Camera stays in the revised hall
+Camera clear at case 191: 
+Camera stays in the revised hall
+Tests start in edit mode
+No missing scripts
+Old layered hall disabled
+Eight uninterrupted piers
+Seepage samples rebuilt from real 24m roof
+No obsolete low-roof seepage
+Dry pocket on walkable deck
+Small exit connects to corridor
+Final water fills hall, exclusion reaches above water
+72-second flood window

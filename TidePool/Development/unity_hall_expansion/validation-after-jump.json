@@ -1,0 +1,29 @@
+{
+    "scene": "Assets/_Game/Scenes/PoolHall_Expanded_01.unity",
+    "time": "2026-10-21T19:55:03",
+    "isPlaying": true,
+    "waterPaused": false,
+    "waterPosition": {
+        "x": 0.0,
+        "y": -0.30000001192092898,
+        "z": 16.0
+    },
+    "waterExtent": {
+        "x": 11.0,
+        "y": 2.700000047683716,
+        "z": 15.0
+    },
+    "playerPosition": {
+        "x": 1.399999976158142,
+        "y": 1.0799999237060547,
+        "z": -2.0
+    },
+    "consolePosition": {
+        "x": 2.5,
+        "y": 0.5,
+        "z": -1.5
+    },
+    "currentWetness": 1.0,
+    "wetRendererCount": 4,
+    "missingScripts": 0
+}

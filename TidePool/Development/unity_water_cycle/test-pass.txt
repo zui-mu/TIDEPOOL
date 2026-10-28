@@ -1,0 +1,2 @@
+PASS: real Input System E drain, Space during drain, empty below floor, second E refill, monotonic fill, overflow, ceiling-level flood, walkable dry pocket, camera in dry air, R reset.
+2026-10-22T08:18:46

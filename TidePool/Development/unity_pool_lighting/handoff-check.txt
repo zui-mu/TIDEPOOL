@@ -1,0 +1,7 @@
+Assets/_Game/Scripts/PlayerMovement.cs enabled
+Assets/_Game/Scripts/CameraFollow.cs enabled
+Assets/_Game/WaterCycle/DryRegionCameraGuard.cs enabled
+Assets/_Game/WaterCycle/PoolWaterCycle.cs enabled
+Assets/_Game/MonumentHall/PoolHallLampRig.cs enabled
+Old baked lighting data removed
+Previous scene backup exists

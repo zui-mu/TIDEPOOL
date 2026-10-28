@@ -1,0 +1,483 @@
+{
+    "time": "2026-10-26T14:47:22",
+    "scene": "Assets/_Game/Scenes/PoolHall_ArmLab_01.unity",
+    "status": "before",
+    "error": "",
+    "backup": "",
+    "playing": false,
+    "outsideHandUnchanged": false,
+    "gripChecks": 0,
+    "fingers": [
+        {
+            "name": "Finger_Middle_Anchor",
+            "anchor": {
+                "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Middle_Anchor",
+                "position": {
+                    "x": 2.5999999046325685,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "chain": [
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Middle_Anchor/Joint1",
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Middle_Anchor/Joint1/Joint2",
+                    "position": {
+                        "x": 1.399999976158142,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Middle_Anchor/Joint1/Joint2/Joint3",
+                    "position": {
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Middle_Anchor/Joint1/Joint2/Joint3/Tip",
+                    "position": {
+                        "x": 0.699999988079071,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ],
+            "displayReferences": true,
+            "driverReferences": true,
+            "grip": 0.0,
+            "closedAngles": {
+                "x": -35.0,
+                "y": -65.0,
+                "z": -45.0
+            },
+            "width": 0.05000000074505806
+        },
+        {
+            "name": "Finger_Index_Anchor",
+            "anchor": {
+                "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Index_Anchor",
+                "position": {
+                    "x": 2.5999999046325685,
+                    "y": 0.0,
+                    "z": 0.699999988079071
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "chain": [
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Index_Anchor/Joint1",
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Index_Anchor/Joint1/Joint2",
+                    "position": {
+                        "x": 1.399999976158142,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Index_Anchor/Joint1/Joint2/Joint3",
+                    "position": {
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Index_Anchor/Joint1/Joint2/Joint3/Tip",
+                    "position": {
+                        "x": 0.699999988079071,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ],
+            "displayReferences": true,
+            "driverReferences": true,
+            "grip": 0.0,
+            "closedAngles": {
+                "x": -35.0,
+                "y": -65.0,
+                "z": -45.0
+            },
+            "width": 0.05000000074505806
+        },
+        {
+            "name": "Finger_Ring_Anchor",
+            "anchor": {
+                "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Ring_Anchor",
+                "position": {
+                    "x": 2.5999999046325685,
+                    "y": 0.0,
+                    "z": -0.5
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "chain": [
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Ring_Anchor/Joint1",
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Ring_Anchor/Joint1/Joint2",
+                    "position": {
+                        "x": 1.399999976158142,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Ring_Anchor/Joint1/Joint2/Joint3",
+                    "position": {
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Ring_Anchor/Joint1/Joint2/Joint3/Tip",
+                    "position": {
+                        "x": 0.699999988079071,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ],
+            "displayReferences": true,
+            "driverReferences": true,
+            "grip": 0.0,
+            "closedAngles": {
+                "x": -35.0,
+                "y": -65.0,
+                "z": -45.0
+            },
+            "width": 0.05000000074505806
+        },
+        {
+            "name": "Finger_Little_Anchor",
+            "anchor": {
+                "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Little_Anchor",
+                "position": {
+                    "x": 2.5999999046325685,
+                    "y": 0.0,
+                    "z": -1.2000000476837159
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0,
+                    "w": 1.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "chain": [
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Little_Anchor/Joint1",
+                    "position": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Little_Anchor/Joint1/Joint2",
+                    "position": {
+                        "x": 1.399999976158142,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Little_Anchor/Joint1/Joint2/Joint3",
+                    "position": {
+                        "x": 1.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "path": "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Little_Anchor/Joint1/Joint2/Joint3/Tip",
+                    "position": {
+                        "x": 0.699999988079071,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ],
+            "displayReferences": true,
+            "driverReferences": true,
+            "grip": 0.0,
+            "closedAngles": {
+                "x": -35.0,
+                "y": -65.0,
+                "z": -45.0
+            },
+            "width": 0.05000000074505806
+        }
+    ],
+    "objects": [
+        "GiantHand_Mechanism",
+        "GiantHand_Mechanism/Shoulder",
+        "GiantHand_Mechanism/Shoulder/UpperArm",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Palm_Visual",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Wrist_JointVisual",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Middle_Anchor",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Middle_Anchor/Joint1",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Middle_Anchor/Joint1/Joint2",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Middle_Anchor/Joint1/Joint2/Joint3",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Middle_Anchor/Joint1/Joint2/Joint3/Tip",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Index_Anchor",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Index_Anchor/Joint1",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Index_Anchor/Joint1/Joint2",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Index_Anchor/Joint1/Joint2/Joint3",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Index_Anchor/Joint1/Joint2/Joint3/Tip",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Ring_Anchor",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Ring_Anchor/Joint1",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Ring_Anchor/Joint1/Joint2",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Ring_Anchor/Joint1/Joint2/Joint3",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Ring_Anchor/Joint1/Joint2/Joint3/Tip",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Little_Anchor",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Little_Anchor/Joint1",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Little_Anchor/Joint1/Joint2",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Little_Anchor/Joint1/Joint2/Joint3",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Wrist/Finger_Little_Anchor/Joint1/Joint2/Joint3/Tip",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Forearm_Visual",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Forearm/Elbow_JointVisual",
+        "GiantHand_Mechanism/Shoulder/UpperArm/UpperArm_Visual",
+        "GiantHand_Mechanism/Shoulder/UpperArm/Shoulder_JointVisual",
+        "GiantHand_Mechanism/Skeleton_Display",
+        "GiantHand_Mechanism/Skeleton_Display/Palm_Outline"
+    ]
+}

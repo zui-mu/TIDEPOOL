@@ -1,0 +1,2 @@
+Assets/_Game/Scenes/PoolHall_Monument_01.unity
+24m hall; 22x42m pool; 8 continuous 2m piers; 72s flood; dry region z51.5

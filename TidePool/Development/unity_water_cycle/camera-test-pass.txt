@@ -1,0 +1,2 @@
+PASS: 192 camera wall/column/entry/pool-floor orbit cases, full pitch range, no collider overlaps, hall bounds, dry-region eye view.
+2026-10-22T11:44:58

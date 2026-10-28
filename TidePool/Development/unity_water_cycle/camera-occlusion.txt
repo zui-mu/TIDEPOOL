@@ -1,0 +1,7 @@
+Sun (53.00, 324.00, 0.00) directionToLight=(0.35, 0.80, -0.49) shadows=Soft bias=0.01,0.02 local=True
+Side_Aisle_Roof cast=On receive=True enabled=True bounds=Center: (-16.93, 6.80, 16.00), Extents: (3.43, 0.20, 26.20)
+West_Plaster cast=On receive=True enabled=True bounds=Center: (-20.25, 9.00, 16.00), Extents: (0.25, 9.00, 26.25)
+Side_Aisle_Roof cast=On receive=True enabled=True bounds=Center: (16.93, 6.80, 16.00), Extents: (3.43, 0.20, 26.20)
+to-sun from (-19.99, 4.00, 16.00): Side_Aisle_Roof (-18.84, 6.60, 14.41)
+to-sun from (-19.99, 5.00, 16.00): Side_Aisle_Roof (-19.28, 6.60, 15.02)
+to-sun from (-19.99, 6.00, 16.00): Side_Aisle_Roof (-19.72, 6.60, 15.63)

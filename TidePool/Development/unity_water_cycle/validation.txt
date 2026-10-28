@@ -1,0 +1,2 @@
+PASS: independent scene; no missing scripts; old drivers disabled; shader compiled; permanent damp floor; 4x4 dry exclusion and floor.
+2026-10-22T08:17:49

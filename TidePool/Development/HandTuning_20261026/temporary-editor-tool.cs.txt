@@ -1,0 +1,123 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+// Temporary editor-only automation; never creates hand objects or changes runtime code.
+[InitializeOnLoad]
+public static class TidePoolHandTune20261026
+{
+    static readonly string Out = Path.GetFullPath(Path.Combine(Application.dataPath, "../Development/HandTuning_20261026"));
+    static double next;
+    [Serializable] public class Pose { public string path; public Vector3 position; public Quaternion rotation; public Vector3 scale; }
+    [Serializable] public class FingerState { public string name; public Pose anchor; public Pose[] chain; public bool displayReferences; public bool driverReferences; public float grip; public Vector3 closedAngles; public float width; }
+    [Serializable] public class Report { public string time; public string scene; public string status; public string error; public string backup; public bool playing; public bool outsideHandUnchanged; public int gripChecks; public FingerState[] fingers; public string[] objects; }
+    class Spec { public string name; public Vector3 position; public float yaw; public Vector3 lengths; public Spec(string n, Vector3 p, float y, Vector3 l) { name=n;position=p;yaw=y;lengths=l; } }
+    static readonly Spec[] Specs = {
+        new Spec("Finger_Index_Anchor", new Vector3(3.9f,0,-1.35f),19,new Vector3(2.2f,1.5f,1.1f)),
+        new Spec("Finger_Middle_Anchor", new Vector3(4.2f,0,0),0,new Vector3(2.4f,1.7f,1.2f)),
+        new Spec("Finger_Ring_Anchor", new Vector3(3.9f,0,1.25f),-18,new Vector3(2.2f,1.55f,1.1f)),
+        new Spec("Finger_Little_Anchor", new Vector3(3.25f,0,2.3f),-35,new Vector3(1.65f,1.15f,.85f))
+    };
+    static TidePoolHandTune20261026() { Directory.CreateDirectory(Out); EditorApplication.update -= Tick; EditorApplication.update += Tick; }
+    static void Tick()
+    {
+        if (EditorApplication.isCompiling || EditorApplication.isUpdating || EditorApplication.timeSinceStartup < next) return;
+        next = EditorApplication.timeSinceStartup + .5;
+        File.WriteAllText(Path.Combine(Out,"heartbeat.txt"), DateTime.Now.ToString("s") + " playing=" + EditorApplication.isPlaying);
+        string request = Path.Combine(Out,"request.txt");
+        if (!File.Exists(request)) return;
+        string command=File.ReadAllText(request).Trim(); File.Delete(request);
+        try {
+            if(command=="inspect") Write(Snapshot("inspect"),"inspection.json");
+            else if(command=="apply") Apply();
+            else throw new Exception("Unsupported command: " + command);
+        } catch(Exception e) { Write(new Report {time=DateTime.Now.ToString("s"),scene=SceneManager.GetActiveScene().path,status="error",error=e.ToString(),playing=EditorApplication.isPlaying},"result.json"); }
+    }
+    static void Require(bool ok,string reason) { if(!ok) throw new Exception(reason); }
+    static Transform Hand() {
+        var scene=SceneManager.GetActiveScene();
+        Require(scene.path=="Assets/_Game/Scenes/PoolHall_ArmLab_01.unity","Expected current ArmLab scene; refusing other scene.");
+        var roots=scene.GetRootGameObjects().Where(x=>x.name=="GiantHand_Mechanism").ToArray();
+        Require(roots.Length==1,"Expected one GiantHand_Mechanism.");return roots[0].transform;
+    }
+    static string HierarchyPath(Transform t) { return t.parent ? HierarchyPath(t.parent)+"/"+t.name : t.name; }
+    static Pose Capture(Transform t) { return new Pose {path=HierarchyPath(t),position=t.localPosition,rotation=t.localRotation,scale=t.localScale}; }
+    static FingerState Finger(FingerLineView f) {
+        var d=f.GetComponent<FingerGripDriver>();
+        var joints=new[]{f.joint1,f.joint2,f.joint3,f.tip};
+        return new FingerState {name=f.name,anchor=Capture(f.transform),chain=joints.Where(t=>t!=null).Select(Capture).ToArray(),displayReferences=joints.All(t=>t && t.IsChildOf(f.transform)),driverReferences=d && d.joint1==f.joint1 && d.joint2==f.joint2 && d.joint3==f.joint3,grip=d?d.grip:0,closedAngles=d?new Vector3(d.joint1ClosedAngle,d.joint2ClosedAngle,d.joint3ClosedAngle):Vector3.zero,width=f.lineWidth};
+    }
+    static Report Snapshot(string status) {var h=Hand();return new Report {time=DateTime.Now.ToString("s"),scene=SceneManager.GetActiveScene().path,status=status,playing=EditorApplication.isPlaying,fingers=h.GetComponentsInChildren<FingerLineView>(true).Select(Finger).ToArray(),objects=h.GetComponentsInChildren<Transform>(true).Select(HierarchyPath).ToArray()};}
+    static void Write(Report report,string name) {File.WriteAllText(Path.Combine(Out,name),JsonUtility.ToJson(report,true));}
+    static string OutsideHand(Transform hand) {return string.Join("\n",SceneManager.GetActiveScene().GetRootGameObjects().SelectMany(g=>g.GetComponentsInChildren<Transform>(true)).Where(t=>!t.IsChildOf(hand)).OrderBy(HierarchyPath).Select(t=>JsonUtility.ToJson(Capture(t))));}
+    static void Apply()
+    {
+        Require(!EditorApplication.isPlayingOrWillChangePlaymode,"Apply requires Edit mode.");
+        Require(!Lightmapping.isRunning,"Apply requires idle lightmapper.");
+        var scene=SceneManager.GetActiveScene();var hand=Hand();var wrist=hand.Find("Shoulder/UpperArm/Forearm/Wrist");
+        Require(wrist,"Expected existing Wrist hierarchy.");
+        Require(Vector3.Distance(wrist.lossyScale,Vector3.one)<.0001f,"Existing Wrist scale must be one.");
+        var all=hand.GetComponentsInChildren<FingerLineView>(true);
+        var selected=new List<FingerLineView>();
+        foreach(var spec in Specs) {
+            var found=all.Where(f=>f.name==spec.name).ToArray();Require(found.Length==1,"Expected existing finger: "+spec.name);
+            var f=found[0];var d=f.GetComponent<FingerGripDriver>();
+            Require(f.transform.parent==wrist,"Anchor must be a direct Wrist child: "+f.name);
+            Require(f.joint1 && f.joint2 && f.joint3 && f.tip,"Missing display reference: "+f.name);
+            Require(f.joint1.parent==f.transform && f.joint2.parent==f.joint1 && f.joint3.parent==f.joint2 && f.tip.parent==f.joint3,"Unexpected joint parenting: "+f.name);
+            Require(d && d.joint1==f.joint1 && d.joint2==f.joint2 && d.joint3==f.joint3,"Driver must reference this finger's own joints: "+f.name);
+            foreach(var t in new[]{f.transform,f.joint1,f.joint2,f.joint3,f.tip})Require(Vector3.Distance(t.localScale,Vector3.one)<.0001f,"Scale must be one: "+HierarchyPath(t));
+            selected.Add(f);
+        }
+        string outside=OutsideHand(hand);Write(Snapshot("before"),"before.json");
+        string recovery="Assets/_Recovery/HandTune_Before_"+DateTime.Now.ToString("yyyyMMdd_HHmmss")+".unity";
+        Directory.CreateDirectory(Path.Combine(Application.dataPath,"_Recovery"));
+        Require(EditorSceneManager.SaveScene(scene,recovery,true),"Could not back up the live scene.");
+        Require(scene.path=="Assets/_Game/Scenes/PoolHall_ArmLab_01.unity","Backup changed active scene path unexpectedly.");
+        Undo.IncrementCurrentGroup();int group=Undo.GetCurrentGroup();Undo.SetCurrentGroupName("Tune existing giant hand proportions");
+        int checks=0;
+        try {
+            for(int i=0;i<Specs.Length;i++) {
+                var spec=Specs[i];var f=selected[i];
+                Undo.RecordObjects(new UnityEngine.Object[]{f.transform,f.joint1,f.joint2,f.joint3,f.tip,f},"Tune "+f.name);
+                f.transform.localPosition=spec.position;f.transform.localRotation=Quaternion.Euler(0,spec.yaw,0);
+                f.joint1.localPosition=Vector3.zero;
+                f.joint2.localPosition=Vector3.right*spec.lengths.x;
+                f.joint3.localPosition=Vector3.right*spec.lengths.y;
+                f.tip.localPosition=Vector3.right*spec.lengths.z;f.lineWidth=.08f;
+                var d=f.GetComponent<FingerGripDriver>();float originalGrip=d.grip;
+                var joints=new[]{f.joint1,f.joint2,f.joint3};var rotations=joints.Select(t=>t.localRotation).ToArray();
+                try {
+                    foreach(float grip in new[]{0f,.5f,1f}) {
+                        d.grip=grip;
+                        typeof(FingerGripDriver).GetMethod("LateUpdate",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(d,null);
+                        Require(Mathf.Abs(Vector3.Distance(f.joint1.position,f.joint2.position)-spec.lengths.x)<.001f,"First bone length changed.");
+                        Require(Mathf.Abs(Vector3.Distance(f.joint2.position,f.joint3.position)-spec.lengths.y)<.001f,"Second bone length changed.");
+                        Require(Mathf.Abs(Vector3.Distance(f.joint3.position,f.tip.position)-spec.lengths.z)<.001f,"Third bone length changed.");
+                        Require(!float.IsNaN(f.tip.position.x) && !float.IsNaN(f.tip.position.y) && !float.IsNaN(f.tip.position.z),"Invalid tip position.");checks++;
+                    }
+                } finally {d.grip=originalGrip;for(int k=0;k<3;k++)joints[k].localRotation=rotations[k];}
+                f.SendMessage("LateUpdate");EditorUtility.SetDirty(f);
+            }
+            foreach(var view in hand.GetComponentsInChildren<GiantHandLineView>(true)) {
+                Undo.RecordObject(view,"Tune palm guide dimensions");view.palmLength=4.2f;view.palmWidth=4.8f;view.lineWidth=.09f;view.SendMessage("LateUpdate");EditorUtility.SetDirty(view);
+            }
+            Require(outside==OutsideHand(hand),"A transform outside the hand changed.");
+            EditorSceneManager.MarkSceneDirty(scene);Require(EditorSceneManager.SaveScene(scene),"Could not save tuned scene.");Undo.CollapseUndoOperations(group);
+            var result=Snapshot("pass");result.backup=recovery;result.outsideHandUnchanged=true;result.gripChecks=checks;Write(result,"result.json");
+            var sceneView=SceneView.lastActiveSceneView;
+            if(sceneView) {
+                var points=new List<Vector3>{wrist.position};points.AddRange(selected.Select(f=>f.tip.position));
+                Vector3 center=points.Aggregate(Vector3.zero,(a,b)=>a+b)/points.Count;
+                sceneView.LookAt(center,Quaternion.LookRotation(-wrist.up,-wrist.right),8f);sceneView.orthographic=true;
+            }
+            SceneView.RepaintAll();EditorApplication.QueuePlayerLoopUpdate();
+        } catch {Undo.RevertAllDownToGroup(group);throw;}
+    }
+}

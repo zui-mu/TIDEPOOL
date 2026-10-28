@@ -1,0 +1,2 @@
+PASS: real-time 8 second drain; early/distant pickup blocked; E at letter starts flood; water continues during Chinese letter reading; close restores movement; second console activation blocked; drips become threads; real-time 60 second fill reaches 18.5m; dry column/camera; R resets letter, water and roof.
+2026-10-22T09:24:18

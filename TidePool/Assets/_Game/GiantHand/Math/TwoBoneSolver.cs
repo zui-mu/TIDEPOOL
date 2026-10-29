@@ -11,6 +11,7 @@ public static class TwoBoneSolver
         out Vector3 solvedElbow,
         out string message
     )
+
     {
         solvedElbow = root;
         message = "";
@@ -45,9 +46,7 @@ public static class TwoBoneSolver
 
         Vector3 poleOffset = pole - root;
 
-        Vector3 perpendicular =
-            poleOffset
-            - Vector3.Dot(poleOffset, direction) * direction;
+        Vector3 perpendicular = poleOffset - Vector3.Dot(poleOffset, direction) * direction;
 
         if (perpendicular.magnitude <= epsilon)
         {
@@ -57,8 +56,7 @@ public static class TwoBoneSolver
 
         Vector3 bendDirection = perpendicular.normalized;
 
-        float a =
-            (length1 * length1 + distance * distance - length2 * length2) / (2f * distance);
+        float a = (length1 * length1 + distance * distance - length2 * length2) / (2f * distance);
 
         float hSquared = length1 * length1 - a * a;
         float h = Mathf.Sqrt(Mathf.Max(0f, hSquared));

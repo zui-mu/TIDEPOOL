@@ -1,5 +1,4 @@
 using UnityEngine;
-
 namespace TidePool.GiantHand.AutoGrasp
 {
     public static class CapsuleGeometry
@@ -27,7 +26,7 @@ namespace TidePool.GiantHand.AutoGrasp
             return Mathf.Abs(capsule.axis.sqrMagnitude - 1f ) < 0.001f;
         }
 
-        public static float AxisHalfLengthCapsuleSnapshot(CapsuleSnapshot capsule)
+        public static float AxisHalfLength(CapsuleSnapshot capsule)
         {
             return Mathf.Max(0f,capsule.height * 0.5f - capsule.radius);
         }
@@ -40,18 +39,19 @@ namespace TidePool.GiantHand.AutoGrasp
             out Vector3 surfaceNormal)
         {
             surfacePoint = Vector3.zero;
+            surfaceNormal = Vector3.zero;
             if (!IsValid(capsule) || !IsFinite(axialHeight) || !IsFinite(radialDirection)) return false;
             if (Mathf.Abs(axialHeight) > capsule.height * 0.5f) return false;
-            Vector3 radical = Vector3.ProjectOnPlane(radialDirection, capsule.axis);
-            if (radical.sqrMagnitude < 0.000001f) return false;
-            radical.Normalize();
+            Vector3 radial = Vector3.ProjectOnPlane(radialDirection, capsule.axis);
+            if (radial.sqrMagnitude < 0.000001f) return false;
+            radial.Normalize();
             float halfAxis = AxisHalfLength(capsule);
-            float capHeight = Mathf.Max(0f,Mathf.Abs(axialHeight)-halfAxis
-            
-            
-            
-            
-            );
+            float capHeight = Mathf.Max(0f,Mathf.Abs(axialHeight)-halfAxis);
+            float sectionRadius = Mathf.Sqrt(Mathf.Max(0f,capsule.radius * capsule.radius - capHeight * capHeight));
+            surfacePoint = capsule.center + capsule.axis * axialHeight + radial * sectionRadius;
+            Vector3 axisPoint = capsule.center + capsule.axis * Mathf.Clamp(axialHeight,-halfAxis,halfAxis);
+            surfaceNormal = (surfacePoint - axisPoint).normalized;
+            return true;
         }
     }
 }

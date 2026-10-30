@@ -1,0 +1,222 @@
+{
+  "entries": [
+    {
+      "unityHumanBone": "Hips",
+      "boneName": "Hips"
+    },
+    {
+      "unityHumanBone": "Spine",
+      "boneName": "Spine"
+    },
+    {
+      "unityHumanBone": "Chest",
+      "boneName": "Chest"
+    },
+    {
+      "unityHumanBone": "UpperChest",
+      "boneName": "UpperChest"
+    },
+    {
+      "unityHumanBone": "Neck",
+      "boneName": "Neck"
+    },
+    {
+      "unityHumanBone": "Head",
+      "boneName": "Head"
+    },
+    {
+      "unityHumanBone": "LeftShoulder",
+      "boneName": "LeftShoulder"
+    },
+    {
+      "unityHumanBone": "LeftUpperArm",
+      "boneName": "LeftUpperArm"
+    },
+    {
+      "unityHumanBone": "LeftLowerArm",
+      "boneName": "LeftLowerArm"
+    },
+    {
+      "unityHumanBone": "LeftHand",
+      "boneName": "LeftHand"
+    },
+    {
+      "unityHumanBone": "LeftUpperLeg",
+      "boneName": "LeftUpperLeg"
+    },
+    {
+      "unityHumanBone": "LeftLowerLeg",
+      "boneName": "LeftLowerLeg"
+    },
+    {
+      "unityHumanBone": "LeftFoot",
+      "boneName": "LeftFoot"
+    },
+    {
+      "unityHumanBone": "LeftToes",
+      "boneName": "LeftToes"
+    },
+    {
+      "unityHumanBone": "LeftThumbProximal",
+      "boneName": "LeftThumbProximal"
+    },
+    {
+      "unityHumanBone": "LeftThumbIntermediate",
+      "boneName": "LeftThumbIntermediate"
+    },
+    {
+      "unityHumanBone": "LeftThumbDistal",
+      "boneName": "LeftThumbDistal"
+    },
+    {
+      "unityHumanBone": "LeftIndexProximal",
+      "boneName": "LeftIndexProximal"
+    },
+    {
+      "unityHumanBone": "LeftIndexIntermediate",
+      "boneName": "LeftIndexIntermediate"
+    },
+    {
+      "unityHumanBone": "LeftIndexDistal",
+      "boneName": "LeftIndexDistal"
+    },
+    {
+      "unityHumanBone": "LeftMiddleProximal",
+      "boneName": "LeftMiddleProximal"
+    },
+    {
+      "unityHumanBone": "LeftMiddleIntermediate",
+      "boneName": "LeftMiddleIntermediate"
+    },
+    {
+      "unityHumanBone": "LeftMiddleDistal",
+      "boneName": "LeftMiddleDistal"
+    },
+    {
+      "unityHumanBone": "LeftRingProximal",
+      "boneName": "LeftRingProximal"
+    },
+    {
+      "unityHumanBone": "LeftRingIntermediate",
+      "boneName": "LeftRingIntermediate"
+    },
+    {
+      "unityHumanBone": "LeftRingDistal",
+      "boneName": "LeftRingDistal"
+    },
+    {
+      "unityHumanBone": "LeftLittleProximal",
+      "boneName": "LeftLittleProximal"
+    },
+    {
+      "unityHumanBone": "LeftLittleIntermediate",
+      "boneName": "LeftLittleIntermediate"
+    },
+    {
+      "unityHumanBone": "LeftLittleDistal",
+      "boneName": "LeftLittleDistal"
+    },
+    {
+      "unityHumanBone": "LeftEye",
+      "boneName": "LeftEye"
+    },
+    {
+      "unityHumanBone": "RightShoulder",
+      "boneName": "RightShoulder"
+    },
+    {
+      "unityHumanBone": "RightUpperArm",
+      "boneName": "RightUpperArm"
+    },
+    {
+      "unityHumanBone": "RightLowerArm",
+      "boneName": "RightLowerArm"
+    },
+    {
+      "unityHumanBone": "RightHand",
+      "boneName": "RightHand"
+    },
+    {
+      "unityHumanBone": "RightUpperLeg",
+      "boneName": "RightUpperLeg"
+    },
+    {
+      "unityHumanBone": "RightLowerLeg",
+      "boneName": "RightLowerLeg"
+    },
+    {
+      "unityHumanBone": "RightFoot",
+      "boneName": "RightFoot"
+    },
+    {
+      "unityHumanBone": "RightToes",
+      "boneName": "RightToes"
+    },
+    {
+      "unityHumanBone": "RightThumbProximal",
+      "boneName": "RightThumbProximal"
+    },
+    {
+      "unityHumanBone": "RightThumbIntermediate",
+      "boneName": "RightThumbIntermediate"
+    },
+    {
+      "unityHumanBone": "RightThumbDistal",
+      "boneName": "RightThumbDistal"
+    },
+    {
+      "unityHumanBone": "RightIndexProximal",
+      "boneName": "RightIndexProximal"
+    },
+    {
+      "unityHumanBone": "RightIndexIntermediate",
+      "boneName": "RightIndexIntermediate"
+    },
+    {
+      "unityHumanBone": "RightIndexDistal",
+      "boneName": "RightIndexDistal"
+    },
+    {
+      "unityHumanBone": "RightMiddleProximal",
+      "boneName": "RightMiddleProximal"
+    },
+    {
+      "unityHumanBone": "RightMiddleIntermediate",
+      "boneName": "RightMiddleIntermediate"
+    },
+    {
+      "unityHumanBone": "RightMiddleDistal",
+      "boneName": "RightMiddleDistal"
+    },
+    {
+      "unityHumanBone": "RightRingProximal",
+      "boneName": "RightRingProximal"
+    },
+    {
+      "unityHumanBone": "RightRingIntermediate",
+      "boneName": "RightRingIntermediate"
+    },
+    {
+      "unityHumanBone": "RightRingDistal",
+      "boneName": "RightRingDistal"
+    },
+    {
+      "unityHumanBone": "RightLittleProximal",
+      "boneName": "RightLittleProximal"
+    },
+    {
+      "unityHumanBone": "RightLittleIntermediate",
+      "boneName": "RightLittleIntermediate"
+    },
+    {
+      "unityHumanBone": "RightLittleDistal",
+      "boneName": "RightLittleDistal"
+    },
+    {
+      "unityHumanBone": "RightEye",
+      "boneName": "RightEye"
+    }
+  ],
+  "restPose": "A-pose; configure/enforce T-pose when creating Unity Avatar",
+  "skinned": true
+}

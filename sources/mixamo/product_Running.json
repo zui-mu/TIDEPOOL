@@ -1,0 +1,43 @@
+{
+  "official_url": "https://www.mixamo.com/api/v1/products/c9c6cb0d-b96c-11e4-a802-0aaa78deedf9",
+  "data": {
+    "id": "c9c6cb0d-b96c-11e4-a802-0aaa78deedf9",
+    "type": "Motion",
+    "description": "Running Leaning Back Or Forth",
+    "category": "",
+    "character_type": "human",
+    "name": "Running",
+    "motion_id": "c9c6cb0d-b96c-11e4-a802-0aaa78deedf9",
+    "details": {
+      "supports_inplace": true,
+      "loopable": true,
+      "default_frame_length": 19,
+      "duration": 0.63,
+      "gms_hash": {
+        "model-id": 105940901,
+        "mirror": false,
+        "trim": [
+          0.0,
+          100.0
+        ],
+        "inplace": false,
+        "arm-space": 0,
+        "params": [
+          [
+            "Style",
+            0.0
+          ],
+          [
+            "Speed",
+            0.0
+          ],
+          [
+            "Overdrive",
+            0.0
+          ]
+        ]
+      }
+    },
+    "source": "system"
+  }
+}

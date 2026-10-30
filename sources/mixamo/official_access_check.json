@@ -1,0 +1,38 @@
+{
+  "checks": [
+    {
+      "url": "https://www.mixamo.com/",
+      "status": 200,
+      "final_url": "https://www.mixamo.com/",
+      "content_type": "text/html; charset=UTF-8",
+      "scripts": [
+        "//d2z4fokrw4vfz7.cloudfront.net/verold/runtime/verold-runtime-0.7.15.js",
+        "https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/privacy-standalone.js",
+        "js/mixamo.min.1295a6f5.js"
+      ],
+      "sample": ""
+    },
+    {
+      "url": "https://www.mixamo.com/api/v1/products?limit=1&page=1&type=Motion",
+      "status": 403,
+      "detail": "{\"error_code\":\"403000\",\"message\":\"Api Key is required\"}\n"
+    }
+  ],
+  "browser_control": "Initialization timed out twice; existing login status could not be inspected",
+  "downloads_completed": false,
+  "authenticated_catalog_probe": {
+    "url": "https://www.mixamo.com/api/v1/products?limit=1&page=1&type=Motion",
+    "public_site_api_key_used": true,
+    "authenticated_session_used": false,
+    "status": 200,
+    "detail": "{\"results\":[{\"id\":\"c9c68950-b96c-11e4-a802-0aaa78deedf9\",\"type\":\"Motion\",\"description\":\"Reaction To Getting Clipped While Walking Unaware\",\"category\":\"\",\"character_type\":\"human\",\"name\":\"Shoved Reaction With Spin\",\"thumbnail\":\"https://d99n9xvb9513w.cloudfront.net/thumbnails/motions/102450901/static.png\",\"thumbnail_animated\":\"https://d99n9xvb9513w.cloudfront.net/thumbnails/motions/102450901/animated.gif\",\"motion_id\":\"c9c68950-b96c-11e4-a802-0aaa78deedf9\",\"motions\":null,\"source\":\"system\"}],\"paginat"
+  },
+  "official_frontend_export_endpoint": "/api/v1/animations/export",
+  "export_mechanism": "Authenticated POST with character_id and export preferences; no static per-animation FBX link found",
+  "export_probe_without_browser_session": {
+    "url": "https://www.mixamo.com/api/v1/animations/export",
+    "authenticated_session_used": false,
+    "status": 401,
+    "detail": "{\"error_code\":\"401013\",\"message\":\"Oauth token is not valid\"}\n"
+  }
+}

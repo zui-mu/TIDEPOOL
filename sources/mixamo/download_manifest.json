@@ -1,0 +1,138 @@
+{
+  "provider": "Adobe Mixamo",
+  "official_site": "https://www.mixamo.com/",
+  "date": "2026-10-30",
+  "source_character": "Y Bot",
+  "items": [
+    {
+      "file": "Mixamo_Source_TPose.fbx",
+      "name": "Y Bot",
+      "kind": "Character",
+      "query": "Y Bot",
+      "skin": true,
+      "in_place": false,
+      "description": "",
+      "official_metadata_url": "https://www.mixamo.com/api/v1/characters/4f5d21e1-4ccc-41f1-b35b-fb2547bd8493",
+      "official_search_page": "https://www.mixamo.com/#/?page=1&query=Y+Bot&type=Character",
+      "download_status": "user_download_received_and_unity_validated",
+      "export_preferences": {
+        "format": "fbx7_unity",
+        "fps": "30",
+        "skin": "true",
+        "reducekf": "0",
+        "mesh": "t-pose"
+      },
+      "preview": {
+        "source_url": "https://www.mixamo.com/api/v1/characters/4f5d21e1-4ccc-41f1-b35b-fb2547bd8493/assets/thumbnails/static.png",
+        "file": "previews/Mixamo_Source_TPose.png",
+        "bytes": 10270,
+        "sha256": "c26643565ef4804bd6a1a50b12b2d2e88577557a856fc0c7eae654eadc358291"
+      },
+      "planned_catalog_id": "4f5d21e1-4ccc-41f1-b35b-fb2547bd8493",
+      "actual_filename": "Y Bot.fbx",
+      "bytes": 1982368,
+      "sha256": "996e27554e347ae32de3d684b11d0a9a6bf7ecc42310452a410d197b9006ce10",
+      "exact_catalog_identity_verified": false,
+      "unity_source_copy": "TidePool/Assets/_Game/Characters/GirlV06/Editor/MixamoSources/SourceRig_YBot.fbx"
+    },
+    {
+      "file": "Idle.fbx",
+      "name": "Idle",
+      "kind": "Motion",
+      "query": "Standing Idle",
+      "skin": false,
+      "in_place": false,
+      "description": "Standing Idle",
+      "official_metadata_url": "https://www.mixamo.com/api/v1/products/c9c972d1-b96c-11e4-a802-0aaa78deedf9",
+      "official_search_page": "https://www.mixamo.com/#/?page=1&query=Standing+Idle&type=Motion%2CMotionPack",
+      "download_status": "user_download_received_and_unity_validated",
+      "export_preferences": {
+        "format": "fbx7_unity",
+        "fps": "30",
+        "skin": "false",
+        "reducekf": "0"
+      },
+      "preview": {
+        "source_url": "https://d99n9xvb9513w.cloudfront.net/thumbnails/motions/117780901/animated.gif",
+        "file": "previews/Idle.gif",
+        "bytes": 877225,
+        "sha256": "1de7b04ddc5f367e5f6ed0e1ac115755199ba04d8f311c8c7ec0cbf37ebd35a0"
+      },
+      "planned_catalog_id": "c9c972d1-b96c-11e4-a802-0aaa78deedf9",
+      "actual_filename": "Standing Idle.fbx",
+      "bytes": 2433856,
+      "sha256": "05f7c67bdb0a559c6fa4e5774ea79d9c2481cf41f4790415fa78ef4154f75645",
+      "exact_catalog_identity_verified": false,
+      "unity_source_copy": "TidePool/Assets/_Game/Characters/GirlV06/Editor/MixamoSources/Idle.fbx"
+    },
+    {
+      "file": "Walk.fbx",
+      "name": "Walking",
+      "kind": "Motion",
+      "query": "Male Standard Walk",
+      "skin": false,
+      "in_place": true,
+      "description": "Male Standard Walk",
+      "official_metadata_url": "https://www.mixamo.com/api/v1/products/c9c634c5-b96c-11e4-a802-0aaa78deedf9",
+      "official_search_page": "https://www.mixamo.com/#/?page=1&query=Male+Standard+Walk&type=Motion%2CMotionPack",
+      "download_status": "user_download_received_and_unity_validated",
+      "export_preferences": {
+        "format": "fbx7_unity",
+        "fps": "30",
+        "skin": "false",
+        "reducekf": "0"
+      },
+      "preview": {
+        "source_url": "https://d99n9xvb9513w.cloudfront.net/thumbnails/motions/101410901/animated.gif",
+        "file": "previews/Walk.gif",
+        "bytes": 128317,
+        "sha256": "89bc267aa4056f25a3e15ba176b682c69b95e554d7d3027f797855346889faea"
+      },
+      "planned_catalog_id": "c9c634c5-b96c-11e4-a802-0aaa78deedf9",
+      "actual_filename": "Walking.fbx",
+      "bytes": 2106656,
+      "sha256": "3f6def766ab064ee33f3b089fbf8dbe9cb659eb7d2eca21905073ecd72020945",
+      "exact_catalog_identity_verified": false,
+      "unity_source_copy": "TidePool/Assets/_Game/Characters/GirlV06/Editor/MixamoSources/Walk.fbx"
+    },
+    {
+      "file": "Run.fbx",
+      "name": "Running",
+      "kind": "Motion",
+      "query": "Running Forward Quickly",
+      "skin": false,
+      "in_place": true,
+      "description": "Running Forward Quickly",
+      "official_metadata_url": "https://www.mixamo.com/api/v1/products/c9c97eca-b96c-11e4-a802-0aaa78deedf9",
+      "official_search_page": "https://www.mixamo.com/#/?page=1&query=Running+Forward+Quickly&type=Motion%2CMotionPack",
+      "download_status": "user_download_received_and_unity_validated",
+      "export_preferences": {
+        "format": "fbx7_unity",
+        "fps": "30",
+        "skin": "false",
+        "reducekf": "0"
+      },
+      "preview": {
+        "source_url": "https://d99n9xvb9513w.cloudfront.net/thumbnails/motions/117600901/animated.gif",
+        "file": "previews/Run.gif",
+        "bytes": 73756,
+        "sha256": "65a117c67edc4d44fb4720963a95b8dc192f1de2491a6116abe0d33b361caf72"
+      },
+      "planned_catalog_id": "c9c97eca-b96c-11e4-a802-0aaa78deedf9",
+      "actual_filename": "Running.fbx",
+      "bytes": 2045984,
+      "sha256": "a76053db8d8c5ec06ef08d5e5b0d7d4932d9295e98350d52bf2a0bca5c2430a3",
+      "exact_catalog_identity_verified": false,
+      "unity_source_copy": "TidePool/Assets/_Game/Characters/GirlV06/Editor/MixamoSources/Run.fbx"
+    }
+  ],
+  "fbx_downloads_completed": 4,
+  "blocking_reason": null,
+  "existing_official_test_assets": "../unity-official-tests",
+  "downloaded_by": "user",
+  "unity_validation_passed": true,
+  "unity_version": "6000.3.26f1",
+  "production_character": "TidePool/Assets/_Game/Characters/GirlV06/GirlV06_Character.prefab",
+  "validation_scene": "TidePool/Assets/_Game/Scenes/GirlV06_MixamoValidation.unity",
+  "provenance_note": "Catalog IDs describe planned candidates. Exact service product identity is not inferred from generic FBX filenames. The four received files were validated by their actual skeleton and animation content."
+}

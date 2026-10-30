@@ -1,0 +1,35 @@
+{
+  "official_url": "https://www.mixamo.com/api/v1/products/c9c972d1-b96c-11e4-a802-0aaa78deedf9",
+  "data": {
+    "id": "c9c972d1-b96c-11e4-a802-0aaa78deedf9",
+    "type": "Motion",
+    "description": "Standing Idle",
+    "category": "",
+    "character_type": "human",
+    "name": "Idle",
+    "motion_id": "c9c972d1-b96c-11e4-a802-0aaa78deedf9",
+    "details": {
+      "supports_inplace": false,
+      "loopable": true,
+      "default_frame_length": 250,
+      "duration": 8.33,
+      "gms_hash": {
+        "model-id": 117780901,
+        "mirror": false,
+        "trim": [
+          0.0,
+          100.0
+        ],
+        "inplace": false,
+        "arm-space": 0,
+        "params": [
+          [
+            "Overdrive",
+            0.0
+          ]
+        ]
+      }
+    },
+    "source": "system"
+  }
+}

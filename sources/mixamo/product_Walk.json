@@ -1,0 +1,16 @@
+{
+  "official_url": "https://www.mixamo.com/api/v1/products/c9c634c5-b96c-11e4-a802-0aaa78deedf9",
+  "data": {
+    "id": "c9c634c5-b96c-11e4-a802-0aaa78deedf9",
+    "type": "Motion",
+    "description": "Male Standard Walk",
+    "category": "",
+    "character_type": "human",
+    "name": "Walking",
+    "thumbnail": "https://d99n9xvb9513w.cloudfront.net/thumbnails/motions/101410901/static.png",
+    "thumbnail_animated": "https://d99n9xvb9513w.cloudfront.net/thumbnails/motions/101410901/animated.gif",
+    "motion_id": "c9c634c5-b96c-11e4-a802-0aaa78deedf9",
+    "motions": null,
+    "source": "system"
+  }
+}

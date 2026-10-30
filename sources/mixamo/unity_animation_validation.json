@@ -1,0 +1,73 @@
+{
+    "date": "2026-10-30T00:49:24",
+    "unityVersion": "6000.3.26f1",
+    "sourceAvatar": "SourceRig_YBotAvatar",
+    "targetAvatar": "Girl_Shoulder_v06Avatar",
+    "sourceAvatarValid": true,
+    "targetAvatarValid": true,
+    "runtimePassed": true,
+    "clips": [
+        {
+            "name": "Idle",
+            "sourceFile": "Assets/GirlV06/Editor/MixamoSources/Idle.fbx",
+            "seconds": 6.000000476837158,
+            "humanMotion": true,
+            "finite": true,
+            "standalone": true,
+            "sourceMeshCount": 2,
+            "samples": 60,
+            "sourceAverageSpeed": 0.0,
+            "leftLegMotionDegrees": 0.37949126958847048,
+            "leftArmMotionDegrees": 6.475461959838867,
+            "rootDrift": 0.0,
+            "hipSpan": 0.003176703816279769,
+            "minFootY": -0.000581531785428524,
+            "maxRadius": 1.6408886909484864
+        },
+        {
+            "name": "Walk",
+            "sourceFile": "Assets/GirlV06/Editor/MixamoSources/Walk.fbx",
+            "seconds": 1.2333333492279053,
+            "humanMotion": true,
+            "finite": true,
+            "standalone": true,
+            "sourceMeshCount": 2,
+            "samples": 60,
+            "sourceAverageSpeed": 0.0,
+            "leftLegMotionDegrees": 30.221698760986329,
+            "leftArmMotionDegrees": 24.566911697387697,
+            "rootDrift": 0.0,
+            "hipSpan": 0.04934967681765556,
+            "minFootY": -0.004169918596744537,
+            "maxRadius": 1.6301419734954835
+        },
+        {
+            "name": "Run",
+            "sourceFile": "Assets/GirlV06/Editor/MixamoSources/Run.fbx",
+            "seconds": 0.7000000476837158,
+            "humanMotion": true,
+            "finite": true,
+            "standalone": true,
+            "sourceMeshCount": 2,
+            "samples": 60,
+            "sourceAverageSpeed": 0.0,
+            "leftLegMotionDegrees": 50.97918701171875,
+            "leftArmMotionDegrees": 54.424495697021487,
+            "rootDrift": 0.0,
+            "hipSpan": 0.09051331877708435,
+            "minFootY": -0.0011024922132492066,
+            "maxRadius": 1.5978319644927979
+        }
+    ],
+    "runtime": [
+        "Idle played on girl's own Avatar; root=(0.00, 0.00, 0.00)",
+        "Walk played on girl's own Avatar; root=(0.00, 0.00, 0.00)",
+        "Run played on girl's own Avatar; root=(0.00, 0.00, 0.00)"
+    ],
+    "warnings": [
+        "Idle source contains a character mesh; runtime uses only the extracted standalone animation.",
+        "Walk source contains a character mesh; runtime uses only the extracted standalone animation.",
+        "Run source contains a character mesh; runtime uses only the extracted standalone animation."
+    ],
+    "errors": []
+}

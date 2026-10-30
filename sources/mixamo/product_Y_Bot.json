@@ -1,0 +1,14 @@
+{
+  "official_url": "https://www.mixamo.com/api/v1/products/4f5d21e1-4ccc-41f1-b35b-fb2547bd8493?type=Character",
+  "data": {
+    "id": "4f5d21e1-4ccc-41f1-b35b-fb2547bd8493",
+    "type": "Motion",
+    "description": "",
+    "category": "",
+    "character_type": "human",
+    "name": "Y Bot",
+    "motion_id": "4f5d21e1-4ccc-41f1-b35b-fb2547bd8493",
+    "details": null,
+    "source": "system"
+  }
+}

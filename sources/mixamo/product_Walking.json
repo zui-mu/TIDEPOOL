@@ -1,0 +1,35 @@
+{
+  "official_url": "https://www.mixamo.com/api/v1/products/c9c99ece-b96c-11e4-a802-0aaa78deedf9",
+  "data": {
+    "id": "c9c99ece-b96c-11e4-a802-0aaa78deedf9",
+    "type": "Motion",
+    "description": "Walking With A Swagger",
+    "category": "",
+    "character_type": "human",
+    "name": "Walking",
+    "motion_id": "c9c99ece-b96c-11e4-a802-0aaa78deedf9",
+    "details": {
+      "supports_inplace": true,
+      "loopable": true,
+      "default_frame_length": 31,
+      "duration": 1.03,
+      "gms_hash": {
+        "model-id": 118080901,
+        "mirror": false,
+        "trim": [
+          0.0,
+          100.0
+        ],
+        "inplace": false,
+        "arm-space": 0,
+        "params": [
+          [
+            "Overdrive",
+            0.0
+          ]
+        ]
+      }
+    },
+    "source": "system"
+  }
+}

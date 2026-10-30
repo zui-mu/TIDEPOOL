@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/Unity-Technologies/animation-jobs-samples",
+  "files": [
+    "DefaultMale_Humanoid.fbx",
+    "DefaultMale_Humanoid.fbx.meta",
+    "LICENSE.md"
+  ],
+  "commit": "8345d25a8e4898b9d10415eda1cdb64faa5a9fdf",
+  "purpose": "Humanoid retargeting validation in Unity only"
+}

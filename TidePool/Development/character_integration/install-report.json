@@ -1,0 +1,31 @@
+{
+    "date": "2026-10-30T09:04:02",
+    "scene": "Assets/_Game/Scenes/PoolHall_ArmLab_01.unity",
+    "backup": "E:\\jianmowenjian\\unityproject\\TIDEPOOL\\TidePool\\Development\\character_integration\\BeforeIntegration\\ArmLab_in_memory_before.unity",
+    "controller": "Assets/_Game/Characters/GirlV06/Animations/GirlV06_Locomotion.controller",
+    "passed": true,
+    "rootPreserved": true,
+    "cameraReferencePreserved": true,
+    "waterReferencePreserved": true,
+    "walkSpeed": 1.5499999523162842,
+    "runSpeed": 3.700000047683716,
+    "walkStrideSpeed": 0.8846936225891113,
+    "runStrideSpeed": 2.7592239379882814,
+    "walkClipRate": 1.752018928527832,
+    "runClipRate": 1.3409568071365357,
+    "bodyHeight": 1.5893536806106568,
+    "visualFootOffset": -1.0126094818115235,
+    "playerPosition": {
+        "x": 0.0,
+        "y": 1.0,
+        "z": -1.7999999523162842
+    },
+    "colliderCenter": {
+        "x": 0.0,
+        "y": -0.19032317399978639,
+        "z": 0.0
+    },
+    "colliderHeight": 1.6193536520004273,
+    "colliderRadius": 0.2800000011920929,
+    "errors": []
+}

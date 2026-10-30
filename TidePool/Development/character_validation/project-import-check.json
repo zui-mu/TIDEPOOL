@@ -1,0 +1,22 @@
+{
+    "date": "2026-10-30T01:02:31",
+    "unityVersion": "6000.3.26f1",
+    "activeSceneBefore": "",
+    "activeSceneAfter": "",
+    "scriptsCompiled": true,
+    "avatarValid": true,
+    "avatarHuman": true,
+    "shoulderComponent": true,
+    "sceneUntouched": true,
+    "passed": true,
+    "humanMappings": 54,
+    "meshCount": 4,
+    "triangles": 61332,
+    "animations": [
+        "Idle seconds=6 humanoid=True looping=True",
+        "Walk seconds=1.233333 humanoid=True looping=True",
+        "Run seconds=0.7 humanoid=True looping=True"
+    ],
+    "productionEditorDependencies": [],
+    "errors": []
+}

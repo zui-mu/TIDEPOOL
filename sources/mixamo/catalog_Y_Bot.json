@@ -1,0 +1,26 @@
+{
+  "official_url": "https://www.mixamo.com/api/v1/products?limit=24&page=1&type=Character&query=Y+Bot",
+  "data": {
+    "results": [
+      {
+        "id": "4f5d21e1-4ccc-41f1-b35b-fb2547bd8493",
+        "type": "Character",
+        "description": "",
+        "category": "",
+        "character_type": "human",
+        "name": "Y Bot",
+        "thumbnail": "https://www.mixamo.com/api/v1/characters/4f5d21e1-4ccc-41f1-b35b-fb2547bd8493/assets/thumbnails/static.png",
+        "thumbnail_animated": "https://www.mixamo.com/api/v1/characters/4f5d21e1-4ccc-41f1-b35b-fb2547bd8493/assets/thumbnails/static.png",
+        "motion_id": null,
+        "motions": null,
+        "source": "system"
+      }
+    ],
+    "pagination": {
+      "limit": 24,
+      "page": 1,
+      "num_pages": 1,
+      "num_results": 1
+    }
+  }
+}

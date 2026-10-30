@@ -1,0 +1,1 @@
+Unity 6000.3.26f1 / URP 17.3.0: calibrated Girl Avatar and shoulder correctives verified. User-provided Mixamo Idle, Walk and Run passed 180 samples plus actual Play Mode. Production animation clips are standalone and do not depend on Editor-only source FBXs. Gameplay movement and water interaction are not yet linked.

@@ -1,0 +1,3 @@
+﻿
+﻿
+﻿PASS assertions=47951 randomTargets=1200 maxBoneError=1.353601836395768E-05 maxEndpointError=1.3214498959113138E-05

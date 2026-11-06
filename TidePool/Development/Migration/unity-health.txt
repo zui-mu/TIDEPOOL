@@ -1,8 +1,8 @@
-Imported=2026-10-30T16:21:10
-Project=E:\jianmowenjian\unityproject\TIDEPOOL\TidePool
-Development=E:\jianmowenjian\unityproject\TIDEPOOL\TidePool\Development
+Imported=2026-11-06T08:48:12
+Project=E:\Coding\personal\TIDEPOOL\TidePool
+Development=E:\Coding\personal\TIDEPOOL\TidePool\Development
 Scene=Assets/_Game/Scenes/PoolHall_ArmLab_01.unity
-Playing=False
+Playing=True
 SceneDirty=False
 MissingScripts=0
 Note=Editor domain loaded after migration; scene/runtime sources were not modified.

@@ -1,0 +1,94 @@
+<div id="reflection-two-step-diagram">
+  <h3>先关于 α 线反射，再关于 X 轴反射</h3>
+  <div id="reflection-two-step-plot"></div>
+</div>
+<style>
+#reflection-two-step-diagram { color:var(--foreground); display:grid; gap:calc(var(--font-size-base) * 0.5); }
+#reflection-two-step-diagram h3 { padding-right:90px; }
+#reflection-two-step-diagram svg { display:block; width:100%; }
+#reflection-two-step-diagram svg text { fill:var(--foreground); font-family:inherit; font-size:var(--font-size-base); font-weight:400; }
+</style>
+<script>
+(() => {
+  const root = document.getElementById('reflection-two-step-diagram');
+  const plot = root.querySelector('#reflection-two-step-plot');
+  const ns = 'http://www.w3.org/2000/svg';
+  function draw() {
+    const w = Math.max(280, Math.round(plot.getBoundingClientRect().width));
+    const ox = 25;
+    const r = Math.min(390, (w - 135) / Math.cos(Math.PI / 9));
+    const oy = r * Math.sin(2 * Math.PI / 9) + 64;
+    const h = Math.ceil(2 * r * Math.sin(2 * Math.PI / 9) + 110);
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    svg.setAttribute('width', w);
+    svg.setAttribute('height', h);
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', '交换反射顺序后的完整过程。初始向量beta为20度，先关于方向角30度的alpha直线反射，得到gamma1方向40度；再关于水平X轴反射，得到gamma2方向负40度。全部方向角均从正X轴起算。');
+    function add(tag, attrs, content) {
+      const el = document.createElementNS(ns, tag);
+      for (const [key, val] of Object.entries(attrs || {})) el.setAttribute(key, val);
+      if (content !== undefined) el.textContent = content;
+      svg.appendChild(el);
+      return el;
+    }
+    function point(angle, length) {
+      const a = angle * Math.PI / 180;
+      return [ox + length * Math.cos(a), oy - length * Math.sin(a)];
+    }
+    function line(a, b, color, extra = {}) {
+      add('line', {x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:color,'stroke-width':1.5,...extra});
+    }
+    function text(x, y, content, extra = {}) {
+      add('text',{x,y,...extra},content);
+    }
+    function arrow(angle, color) {
+      const end = point(angle,r);
+      line([ox,oy],end,color,{'stroke-width':2.5});
+      const a = angle * Math.PI / 180;
+      const back = [end[0]-10*Math.cos(a),end[1]+10*Math.sin(a)];
+      const left = [back[0]+4*Math.sin(a),back[1]+4*Math.cos(a)];
+      const right = [back[0]-4*Math.sin(a),back[1]-4*Math.cos(a)];
+      add('polygon',{points:[end,left,right].map(p=>p.join(',')).join(' '),fill:color});
+      return end;
+    }
+    function arc(start, end, radius, color) {
+      const pts=[];
+      for(let a=start;a<=end+0.001;a+=0.5) pts.push(point(a,radius));
+      add('path',{d:pts.map((p,i)=>`${i?'L':'M'} ${p[0]} ${p[1]}`).join(' '),fill:'none',stroke:color,'stroke-width':2});
+    }
+    const ink='var(--foreground)';
+    const c0='var(--viz-series-1)';
+    const c1='var(--viz-series-2)';
+    const c2='var(--viz-series-3)';
+    line([ox-12,oy],[w-14,oy],ink,{'stroke-opacity':0.65});
+    add('polygon',{points:`${w-14},${oy} ${w-22},${oy-3} ${w-22},${oy+3}`,fill:ink});
+    text(w-15,oy-9,'+X',{'text-anchor':'end'});
+    text(w-15,oy+22,'反射线②：X 轴',{'text-anchor':'end'});
+    text(ox-8,oy+22,'O');
+    line(point(30,-22),point(30,r*1.04),ink,{'stroke-dasharray':'6 5','stroke-opacity':0.65});
+    const p0=arrow(20,c0);
+    const p1=arrow(40,c1);
+    const p2=arrow(-40,c2);
+    const pm=point(30,r);
+    text(p0[0]+10,p0[1]+8,'β = 20°');
+    text(p0[0]+10,p0[1]+26,'初始');
+    text(p1[0]+10,p1[1]-14,'γ₁ = 40°');
+    text(p1[0]+10,p1[1]+4,'① 反射后');
+    text(pm[0]+12,pm[1]-2,'α = 30°');
+    text(pm[0]+12,pm[1]+16,'反射线①');
+    text(p2[0]+10,p2[1]-4,'γ₂ = −40°');
+    text(p2[0]+10,p2[1]+14,'② 反射后');
+    arc(20,30,r*0.70,c0);
+    arc(30,40,r*0.70,c1);
+    const a=point(25,r*0.70+26);
+    const b=point(35,r*0.70+26);
+    text(a[0],a[1]+7,'10°',{'text-anchor':'middle'});
+    text(b[0],b[1]-5,'10°',{'text-anchor':'middle'});
+    add('circle',{cx:ox,cy:oy,r:3,fill:ink});
+    plot.replaceChildren(svg);
+  }
+  draw();
+  new ResizeObserver(draw).observe(plot);
+})();
+</script>

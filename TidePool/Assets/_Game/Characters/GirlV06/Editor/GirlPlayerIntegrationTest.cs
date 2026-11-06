@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -12,6 +13,7 @@ using UnityEngine.InputSystem.LowLevel;
 public static class GirlPlayerIntegrationTest
 {
     const string Running="GirlPlayerIntegrationTest.Running";
+    const string Batch="GirlPlayerIntegrationTest.Batch";
     [Serializable] public class Report
     {
         public string date,scene; public bool passed;
@@ -24,6 +26,9 @@ public static class GirlPlayerIntegrationTest
     static GameObject floor,wall;static Vector3 spawn,stagePosition;static Quaternion spawnRotation;
     static int stage,frames,lastFrame;static double deadline;static float jumpBase,maxJump;
     static bool sawAirPose;static float oldCaptureDelta;static bool oldRunInBackground;
+    static InputSettings.BackgroundBehavior oldBackground;
+    static InputSettings.EditorInputBehaviorInPlayMode oldEditorInput;
+    static bool inputSettingsOverridden;
     static string Out=>GirlPlayerIntegration.Out;
     static GirlPlayerIntegrationTest()
     {
@@ -37,12 +42,20 @@ public static class GirlPlayerIntegrationTest
         GirlPlayerIntegration.Require(!UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty,"Save scene before runtime test.");
         SessionState.SetBool(Running,true);EditorApplication.isPlaying=true;
     }
+    public static void RunBatch()
+    {
+        if(!Application.isBatchMode)throw new InvalidOperationException("RunBatch is for a separate batch editor.");
+        EditorSceneManager.OpenScene(GirlPlayerIntegration.ScenePath);
+        SessionState.SetBool(Batch,true);
+        Begin();
+    }
     static void Changed(PlayModeStateChange state)
     {
         if(!SessionState.GetBool(Running,false)) return;
         if(state==PlayModeStateChange.EnteredPlayMode)
         {
             report=new Report{date=DateTime.Now.ToString("s"),scene=GirlPlayerIntegration.ScenePath};
+            oldCaptureDelta=Time.captureDeltaTime;oldRunInBackground=Application.runInBackground;
             try
             {
                 movement=UnityEngine.Object.FindFirstObjectByType<PlayerMovement>();cc=movement.GetComponent<CharacterController>();
@@ -54,9 +67,14 @@ public static class GirlPlayerIntegrationTest
                 spawn=movement.transform.position;spawnRotation=movement.transform.rotation;
                 camera=Camera.main;follow=camera.GetComponent<CameraFollow>();follow.enabled=false;
                 camera.transform.rotation=Quaternion.identity;
+                oldBackground=InputSystem.settings.backgroundBehavior;
+                oldEditorInput=InputSystem.settings.editorInputBehaviorInPlayMode;
+                inputSettingsOverridden=true;
+                InputSystem.settings.backgroundBehavior=InputSettings.BackgroundBehavior.IgnoreFocus;
+                InputSystem.settings.editorInputBehaviorInPlayMode=InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
                 previousKeyboard=Keyboard.current;keyboard=InputSystem.AddDevice<Keyboard>("GirlIntegrationTestKeyboard");keyboard.MakeCurrent();
-                oldCaptureDelta=Time.captureDeltaTime;Time.captureDeltaTime=1f/60f;
-                oldRunInBackground=Application.runInBackground;Application.runInBackground=true;
+                Time.captureDeltaTime=1f/60f;
+                Application.runInBackground=true;
                 floor=GameObject.CreatePrimitive(PrimitiveType.Cube);floor.name="Temporary character test floor";
                 floor.transform.position=new Vector3(50,-.25f,8);floor.transform.localScale=new Vector3(20,.5f,30);
                 Teleport(new Vector3(50,1,0));Physics.SyncTransforms();
@@ -70,6 +88,12 @@ public static class GirlPlayerIntegrationTest
         {
             SessionState.SetBool(Running,false);
             if(report!=null) Save();
+            if(SessionState.GetBool(Batch,false))
+            {
+                SessionState.SetBool(Batch,false);
+                var final=JsonUtility.FromJson<Report>(File.ReadAllText(Path.Combine(Out,"runtime-report.json")));
+                EditorApplication.delayCall+=()=>EditorApplication.Exit(final.passed&&final.errors.Count==0?0:2);
+            }
         }
     }
     static void Log(string text,string stack,LogType type)
@@ -135,11 +159,12 @@ public static class GirlPlayerIntegrationTest
                 case 7:
                     Keys();maxJump=Mathf.Max(maxJump,movement.transform.position.y);
                     sawAirPose|=bridge.animator.GetCurrentAnimatorStateInfo(0).IsName("AirborneHold");
-                    if(frames<100)return;
+                    if(frames<150)return;
                     report.jumpRise=maxJump-jumpBase;
                     Check(report.jumpRise>.95f&&report.jumpRise<1.35f,"Space jump retains existing jump height");
-                    Check(sawAirPose,"Airborne state prevents walk/run cycling in flight (temporary hold pose)");
+                    Check(sawAirPose,"Full jump state replaces walk/run during preparation and flight");
                     Check(movement.IsGrounded&&bridge.animator.GetBool("Grounded"),"Landing returns Animator to grounded locomotion");
+                    Check(!bridge.animator.GetBool("JumpActive")&&bridge.animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion"),"Complete landing recovery finishes before locomotion resumes");
                     var cycle=UnityEngine.Object.FindFirstObjectByType<PoolWaterCycle>();
                     if(cycle)
                     {
@@ -199,6 +224,12 @@ public static class GirlPlayerIntegrationTest
         if(keyboard!=null&&keyboard.added){Keys();InputSystem.RemoveDevice(keyboard);}
         if(previousKeyboard!=null&&previousKeyboard.added)previousKeyboard.MakeCurrent();
         Time.captureDeltaTime=oldCaptureDelta;Application.runInBackground=oldRunInBackground;
+        if(inputSettingsOverridden)
+        {
+            InputSystem.settings.backgroundBehavior=oldBackground;
+            InputSystem.settings.editorInputBehaviorInPlayMode=oldEditorInput;
+            inputSettingsOverridden=false;
+        }
         if(floor)UnityEngine.Object.DestroyImmediate(floor);if(wall)UnityEngine.Object.DestroyImmediate(wall);
     }
 }

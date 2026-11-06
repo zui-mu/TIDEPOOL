@@ -12,5 +12,5 @@ Editor/MixamoSources/ 仅用于重新导入与重建源 Avatar，保留你下载
 角色上的 GirlAnimationPreview 仅用于测试场景。关闭 Auto Cycle 后可用 Motion 下拉框选择动作。
 
 已在 PoolHall_ArmLab_01 场景接入 Player，并用实际移动速度驱动走跑混合。详见 PLAYER_INTEGRATION.md。
-源 Prefab 和独立验证场景继续使用预览配置；ArmLab 场景实例使用正式 Locomotion 控制器。跳跃空中为临时固定姿势，游泳与专门跳跃动作尚待补齐。
+源 Prefab 和独立验证场景继续使用预览配置；ArmLab 场景实例使用正式 Locomotion 控制器。完整跳跃由预备、物理蹬地、腾空和接地恢复协调驱动，原片段不裁切；游泳动作尚待补齐。
 

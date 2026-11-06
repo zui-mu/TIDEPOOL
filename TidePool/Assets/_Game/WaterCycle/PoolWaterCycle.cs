@@ -102,6 +102,8 @@ public sealed class PoolWaterCycle : MonoBehaviour
         if (waterFrame) SetHeight(poolHeight);
         if (resetPlayer && player)
         {
+            var movement = player.GetComponent<PlayerMovement>();
+            if (movement) movement.ResetMotion();
             CharacterController cc = player.GetComponent<CharacterController>();
             bool wasEnabled = cc && cc.enabled;
             if (cc) cc.enabled = false;

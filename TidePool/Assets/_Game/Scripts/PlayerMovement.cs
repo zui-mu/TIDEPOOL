@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public interface IPlayerJumpHandler
 {
-    bool HandleJumpRequest();
+    bool HandleJumpRequest(bool hasMovementInput);
     bool SuppressGroundMovement { get; }
     bool CanExecuteAnimatedJump { get; }
     void CancelJump();
@@ -85,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
         if (Time.deltaTime <= 0f) return;
         bool launch = false;
         if (controller.isGrounded && jump)
-            launch = jumpHandler == null || !jumpHandler.HandleJumpRequest();
+            launch = jumpHandler == null || !jumpHandler.HandleJumpRequest(input.sqrMagnitude > 0f);
         if (animatedLaunchPending)
         {
             animatedLaunchPending = false;

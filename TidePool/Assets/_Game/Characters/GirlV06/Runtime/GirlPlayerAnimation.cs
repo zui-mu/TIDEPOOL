@@ -21,7 +21,7 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
     AnimationClip jumpClip;
     float airborneTime, sourceFrame, fallingFrame, recoveryFrame, lastFrame;
     uint launchBeforeRequest;
-    bool registered, fallOnly;
+    bool registered, fallOnly, movingJump;
     static readonly int MoveSpeed = Animator.StringToHash("MoveSpeed");
     static readonly int Grounded = Animator.StringToHash("Grounded");
     static readonly int VerticalSpeed = Animator.StringToHash("VerticalSpeed");
@@ -34,7 +34,7 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
 
     bool InfrastructureReady => movement && movement.isActiveAndEnabled && animator &&
         animator.isActiveAndEnabled && visualRoot && boundController && animator.runtimeAnimatorController == boundController;
-    public bool SuppressGroundMovement => InfrastructureReady &&
+    public bool SuppressGroundMovement => InfrastructureReady && !movingJump &&
         (jumpPhase == JumpPhase.Preparing || jumpPhase == JumpPhase.AwaitingTakeoff || jumpPhase == JumpPhase.Recovery);
     public bool CanExecuteAnimatedJump => registered && InfrastructureReady && jumpPhase == JumpPhase.AwaitingTakeoff;
 
@@ -87,11 +87,13 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
         if (movement) movement.UnregisterJumpHandler(this);
         registered = false; boundController = null; jumpClip = null;
     }
-    public bool HandleJumpRequest()
+    public bool HandleJumpRequest(bool hasMovementInput)
     {
         if (!InfrastructureReady) return false;
         if (jumpPhase != JumpPhase.Idle || animator.IsInTransition(0) ||
             !animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion")) return true;
+        // Latch input intent once: W+Space from rest is moving; later input cannot change the type.
+        movingJump = hasMovementInput;
         jumpPhase = JumpPhase.Preparing; sourceFrame = 0f; fallOnly = false;
         animator.SetFloat(JumpTime, 0f);
         WriteFlags();
@@ -100,7 +102,7 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
     public void CancelJump()
     {
         if (movement) movement.CancelPendingAnimatedJump(this);
-        jumpPhase = JumpPhase.Idle; fallOnly = false; airborneTime = 0f;
+        jumpPhase = JumpPhase.Idle; fallOnly = movingJump = false; airborneTime = 0f;
         // Keep outgoing pose clocks intact while blending back to locomotion.
         WriteFlags();
     }
@@ -196,7 +198,7 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
                 if (!stableGrounded) { BeginFall(); break; }
                 recoveryFrame = Mathf.Min(lastFrame, recoveryFrame + jumpClip.frameRate * Time.deltaTime);
                 animator.SetFloat(LandingTime, recoveryFrame / lastFrame);
-                if (recoveryFrame >= lastFrame) { jumpPhase = JumpPhase.Idle; WriteFlags(); }
+                if (recoveryFrame >= lastFrame) { jumpPhase = JumpPhase.Idle; movingJump = false; WriteFlags(); }
                 break;
         }
     }

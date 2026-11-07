@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 // Runs the real movement/animation pair, not an animation-only preview. No scene or asset is saved.
 // Write "test" (fail fast) or "capture" (record every case, including failures) to RequestPath.
 [InitializeOnLoad]
-public static class GirlJumpSequenceRegression
+public static partial class GirlJumpSequenceRegression
 {
     const string Running = "GirlJumpSequenceRegression.Running";
     const string Mode = "GirlJumpSequenceRegression.Mode";
@@ -63,6 +63,11 @@ public static class GirlJumpSequenceRegression
         public int fallingSamples, recoverySamples;
         public List<string> checks = new List<string>(), errors = new List<string>();
     }
+    [Serializable] public sealed class EditorSnapshot
+    {
+        public bool playing, compiling, dirty;
+        public string scene;
+    }
     [Serializable] public sealed class Report
     {
         public string date, scene, mode, status, detailDirectory;
@@ -71,6 +76,7 @@ public static class GirlJumpSequenceRegression
         public List<string> checks = new List<string>();
         public List<string> errors = new List<string>();
         public List<JumpResult> jumps = new List<JumpResult>();
+        public List<MovingResult> movingJumps = new List<MovingResult>();
         public List<ScenarioResult> scenarios = new List<ScenarioResult>();
     }
     [Serializable] sealed class SampleFile
@@ -145,7 +151,23 @@ public static class GirlJumpSequenceRegression
         catch (IOException) { return; }
         try
         {
-            Require(command == "test" || command == "capture" || command == "refresh", "Expected request 'test', 'capture' or 'refresh', got: " + command);
+            Require(command == "test" || command == "capture" || command == "moving" || command == "integration" || command == "status" || command == "refresh", "Expected request 'test', 'capture', 'moving', 'integration', 'status' or 'refresh', got: " + command);
+            if (command == "status")
+            {
+                File.WriteAllText(Path.Combine(RequestDirectoryPath, "editor-status.json"), JsonUtility.ToJson(new EditorSnapshot
+                {
+                    playing = EditorApplication.isPlayingOrWillChangePlaymode, compiling = EditorApplication.isCompiling,
+                    scene = SceneManager.GetActiveScene().path,
+                    dirty = Enumerable.Range(0, SceneManager.sceneCount).Any(i => SceneManager.GetSceneAt(i).isDirty)
+                }, true));
+                return;
+            }
+            if (command == "integration")
+            {
+                Require(!EditorApplication.isPlayingOrWillChangePlaymode && !SessionState.GetBool(Running, false), "Finish the jump regression before the integration test.");
+                GirlPlayerIntegrationTest.Begin();
+                return;
+            }
             if (command == "refresh")
             {
                 Require(!EditorApplication.isPlayingOrWillChangePlaymode && !SessionState.GetBool(Running, false),
@@ -315,7 +337,9 @@ public static class GirlJumpSequenceRegression
         deadline = EditorApplication.timeSinceStartup + 420;
         Application.logMessageReceived += Log;
         EditorApplication.update -= Tick; EditorApplication.update += Tick;
-        ResetCase(); Save();
+        if (SessionState.GetString(Mode, "test") == "moving") BeginMovingCase(0);
+        else ResetCase();
+        Save();
     }
 
     static bool HasParameter(string name, AnimatorControllerParameterType type)
@@ -347,7 +371,12 @@ public static class GirlJumpSequenceRegression
             // The editor may disable or switch the current device when focus changes.
             if (!keyboard.enabled) InputSystem.EnableDevice(keyboard);
             keyboard.MakeCurrent();
-            if (caseIndex >= 4) { TickScenario(); return; }
+            if (caseIndex >= 4)
+            {
+                if (caseIndex < 4 + MovingNames.Length) TickMoving();
+                else TickScenario();
+                return;
+            }
             if (stage == 0)
             {
                 Keys();
@@ -379,7 +408,7 @@ public static class GirlJumpSequenceRegression
                 if (frames < 30) return;
                 caseIndex++;
                 if (caseIndex < 4) ResetCase();
-                else BeginScenario(0);
+                else BeginMovingCase(0);
             }
         }
         catch (Exception error) { Fail(error); }
@@ -960,8 +989,10 @@ public static class GirlJumpSequenceRegression
 
     static void Finish()
     {
-        report.passed = report.errors.Count == 0 && report.jumps.Count == 4 && report.jumps.All(j => j.passed)
-            && report.scenarios.Count == ScenarioNames.Length && report.scenarios.All(s => s.passed);
+        bool movingOnly = SessionState.GetString(Mode, "test") == "moving";
+        report.passed = report.errors.Count == 0 && report.jumps.Count == (movingOnly ? 0 : 4) && report.jumps.All(j => j.passed)
+            && report.movingJumps.Count == MovingNames.Length && report.movingJumps.All(j => j.passed)
+            && report.scenarios.Count == (movingOnly ? 0 : ScenarioNames.Length) && report.scenarios.All(s => s.passed);
         report.status = report.passed ? "passed" : "failed";
         Save(); EditorApplication.update -= Tick; EditorApplication.isPlaying = false;
     }
@@ -970,9 +1001,11 @@ public static class GirlJumpSequenceRegression
     {
         if (report == null) report = new Report { date = DateTime.Now.ToString("s"), scene = SceneManager.GetActiveScene().path };
         report.passed = false; report.status = "failed";
-        string context = caseIndex >= 4 && scenario != null ? scenario.name + ", stage " + scenarioStage : "Case " + caseIndex + ", stage " + stage;
+        string context = caseIndex >= 4 && caseIndex < 4 + MovingNames.Length && moving != null
+            ? moving.name + ", stage " + stage
+            : caseIndex >= 4 && scenario != null ? scenario.name + ", stage " + scenarioStage : "Case " + caseIndex + ", stage " + stage;
         report.errors.Add(context + ": " + error);
-        SaveSamples(); SaveScenarioSamples(); Save(); EditorApplication.update -= Tick;
+        SaveSamples(); SaveScenarioSamples(); SaveMovingSamples(); Save(); EditorApplication.update -= Tick;
         if (EditorApplication.isPlayingOrWillChangePlaymode) EditorApplication.isPlaying = false;
         else { Cleanup(); SessionState.SetBool(Running, false); }
     }
@@ -1017,6 +1050,7 @@ public static class GirlJumpSequenceRegression
     static void Cleanup()
     {
         EditorApplication.update -= Tick; Application.logMessageReceived -= Log;
+        DestroyMovingWall();
         if (keyboard != null && keyboard.added) { Keys(); InputSystem.RemoveDevice(keyboard); }
         keyboard = null;
         if (previousKeyboard != null && previousKeyboard.added) previousKeyboard.MakeCurrent();

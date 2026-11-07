@@ -65,3 +65,17 @@ Bind missing bone references 只补缺失绑定；Reset simulation 清除运动�
 验证记录：Development/character_integration/hair-core-regression.json、hair-dynamics-report.json、hair-setup.json；实际运行预览为 hair-dynamics-preview.gif。详细帧和执行记录保存在忽略的 Library/HairDynamicsImplementation。
 
 2026-11-06 头发最终实测：9项核心行为与场景、状态查询隔离、真实动作检查共15项通过，errors=[]；164帧近景覆盖待机、走路、急停、跑跳、转身和R重置。最大发梢偏移约1.84cm、代理最大穿插约8.11mm、发根最大误差约0.0043mm、骨骼局部位置变化为0、重置后偏移约1.58mm。运行中改绑会安全回退并在绑定恢复后重建；状态查询采用独立响应文件，不干扰采集。
+
+## 2026-11-07: Jiggle Physics 接入
+
+ArmLab 的 Player/GirlVisual 已改用 GirlJiggleHair，底层是 sources/JigglePhysics 中固定的 v16.0.1 上游 JiggleJobs。原 GirlHairDynamics 已禁用，仅保留现有骨骼、发梢和身体代理绑定资料，不能与新组件同时启用。
+
+新组件在动画与肩部修正之后运行。两个独立骨骼树使用世界重力、长度约束、局部阻尼和空气阻力，并把现有头/颈/上躯干/双肩代理转换为库的球/胶囊碰撞。初始化与重置使用上游求解器预热至下垂状态，未改 FBX、蒙皮、角色移动或跳跃逻辑。启动预热与重置的时间轴属于独立 Jobs 实例，不改变游戏 Time。
+
+可调参数：stiffness=0.12，damping=0.25，airDrag=0，gravity=1。固定步长 1/60 秒，每帧最多处理 0.1 秒，避免长帧触发反复恢复外张姿态。发骨局部位置保持原值，Renderer 包围盒临时扩大并在关闭时恢复。
+
+源码保留 MIT LICENSE。TIDEPOOL-PATCHES.md 记录 Unity 6.6 EntityId 编译兼容与独立求解器释放回调两项本地补丁；积分和碰撞算法未重写。
+
+旧的自定义弹簧参数、1.8cm 记录及历史验证数据仅适用于此前实现。新效果以本次验证结果和实机录制为准。身体代理是粗略的骨骼碰撞，不能保证每一缕发丝均无穿插。
+
+末端碰撞：每条链在实测发梢处增加一个 HideAndDontSave 末端定位点，使最后一段有权重的发束能参与库的碰撞；重置时先从骨骼层级移除旧定位点再销毁，避免重建时重复扫描。身体代理 enabled 显式启用，并由验证读取实际 Jobs 数据确认。弯曲角限制使用库自带的67.5度限制。

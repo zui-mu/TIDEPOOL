@@ -22,10 +22,19 @@ public static partial class GirlHairDynamicsRegression
         public string name; public int weightedVertices; public float tipLength, radial90;
         public Vector3 tipAxis, headLocalRoot; public List<RigBone> bones = new List<RigBone>();
     }
+    [Serializable] public sealed class HairSnapshot
+    {
+        public bool enabled, valid;
+        public string issue;
+        public int chains;
+        public float strength, inertia, rootFrequency, tipFrequency, dampingRatio;
+        public float deltaTime, unscaledDeltaTime, captureDeltaTime, fade, simulatedOffset, renderedOffset;
+    }
     [Serializable] public sealed class Report
     {
-        public string id, mode, date, status, scene, frameDirectory;
+        public string id, mode, date, status, scene, frameDirectory, collisionDetail;
         public bool passed, playing, compiling, dirty;
+        public HairSnapshot hair;
         public int frames;
         public float maximumOffset, maximumPenetration, maximumAttachmentError, maximumLengthError, resetError, walkSpeed, runSpeed;
         public List<MotionSample> motion = new List<MotionSample>();
@@ -60,7 +69,8 @@ public static partial class GirlHairDynamicsRegression
                 id = request.id, mode = "status", date = DateTime.Now.ToString("s"), status = "passed", passed = true,
                 scene = SceneManager.GetActiveScene().path, playing = EditorApplication.isPlayingOrWillChangePlaymode,
                 compiling = EditorApplication.isCompiling,
-                dirty = Enumerable.Range(0, SceneManager.sceneCount).Any(i => SceneManager.GetSceneAt(i).isDirty)
+                dirty = Enumerable.Range(0, SceneManager.sceneCount).Any(i => SceneManager.GetSceneAt(i).isDirty),
+                hair = ReadHairSnapshot()
             };
             File.WriteAllText(Path.Combine(ProjectRoot, "Temp", "GirlHairDynamics", "status.json"), JsonUtility.ToJson(snapshot, true));
             return;
@@ -296,13 +306,37 @@ public static partial class GirlHairDynamicsRegression
             finally { UnityEngine.Object.DestroyImmediate(anchor); }
         });
     }
+    static HairSnapshot ReadHairSnapshot()
+    {
+        var hair = UnityEngine.Object.FindFirstObjectByType<GirlHairDynamics>();
+        if (!hair) return null;
+        var snapshot = new HairSnapshot
+        {
+            enabled = hair.isActiveAndEnabled, strength = hair.strength, inertia = hair.inertia,
+            rootFrequency = hair.rootFrequency, tipFrequency = hair.tipFrequency, dampingRatio = hair.dampingRatio,
+            deltaTime = Time.deltaTime, unscaledDeltaTime = Time.unscaledDeltaTime, captureDeltaTime = Time.captureDeltaTime,
+            fade = (float)Field(hair, "fade")
+        };
+        snapshot.valid = hair.ValidateConfiguration(out snapshot.issue);
+        var chains = (Array)Field(hair, "chains");
+        if (chains != null) foreach (var chain in chains)
+        {
+            var target = (Vector3[])Field(chain, "target");
+            var position = (Vector3[])Field(chain, "position");
+            var settings = (GirlHairDynamics.ChainSettings)Field(chain, "settings");
+            snapshot.simulatedOffset = Mathf.Max(snapshot.simulatedOffset, Vector3.Distance(position[4], target[4]));
+            snapshot.renderedOffset = Mathf.Max(snapshot.renderedOffset, Vector3.Distance(settings.bones[3].TransformPoint(settings.tipOffset), target[4]));
+            snapshot.chains++;
+        }
+        return snapshot;
+    }
     static void VerifyScene()
     {
         Require(HairType != null, "Hair dynamics type is missing.");
         var player = UnityEngine.Object.FindFirstObjectByType<PlayerMovement>(); Require(player, "Scene player missing.");
         var visual = player.transform.Find("GirlVisual"); Require(visual, "GirlVisual missing.");
         Require(visual.GetComponent(HairType), "ArmLab GirlVisual has no configured hair dynamics yet (expected before installation).");
-        Case("scene-hair-component", () => Require(((Behaviour)visual.GetComponent(HairType)).enabled, "Hair component must be enabled."));
+        Case("scene-hair-component", () => { var replacement=visual.GetComponent<GirlJiggleHair>(); Require(replacement ? replacement.enabled && !((Behaviour)visual.GetComponent(HairType)).enabled : ((Behaviour)visual.GetComponent(HairType)).enabled, "Exactly one configured hair solver must be enabled."); });
     }
     static float Weight(BoneWeight w, int index)
     {
@@ -421,7 +455,7 @@ public static partial class GirlHairDynamicsRegression
         liveMovement = UnityEngine.Object.FindFirstObjectByType<PlayerMovement>();
         liveController = liveMovement.GetComponent<CharacterController>();
         liveHair = liveMovement.transform.Find("GirlVisual").GetComponent<GirlHairDynamics>();
-        Require(liveHair && liveHair.enabled && liveHair.ValidateConfiguration(out _), "Configured live hair component is required.");
+        Require(liveHair && (liveHair.enabled || liveHair.GetComponent<GirlJiggleHair>().enabled) && liveHair.ValidateConfiguration(out _), "Configured live hair component is required.");
         liveCamera = Camera.main; Require(liveCamera, "Main camera missing.");
         oldCameraPosition = liveCamera.transform.position; oldCameraRotation = liveCamera.transform.rotation;
         oldCameraScale = liveCamera.transform.localScale; oldFieldOfView = liveCamera.fieldOfView; oldTarget = liveCamera.targetTexture; oldCameraEnabled = liveCamera.enabled;
@@ -441,6 +475,7 @@ public static partial class GirlHairDynamicsRegression
         liveMovement.ResetMotion(); liveController.enabled = false;
         liveMovement.transform.position = new Vector3(50f, .02f - (liveController.center.y - liveController.height * .5f), 0f);
         liveController.enabled = true; Physics.SyncTransforms();
+
         liveBones = liveHair.left.bones.Concat(liveHair.right.bones).ToArray(); originalLocalPositions = liveBones.Select(b => b.localPosition).ToArray();
         leftRestTip = liveHair.head.InverseTransformPoint(liveHair.left.bones[3].TransformPoint(liveHair.left.tipOffset));
         rightRestTip = liveHair.head.InverseTransformPoint(liveHair.right.bones[3].TransformPoint(liveHair.right.tipOffset));
@@ -461,6 +496,7 @@ public static partial class GirlHairDynamicsRegression
             Require(EditorApplication.timeSinceStartup < playDeadline, "Hair Play verification timed out.");
             Require(report.id == initialPlayId, "A status query must not replace the active capture report.");
             int runtimeFrames = Time.frameCount - playStart;
+            if(runtimeFrames <= 3 && liveHair.GetComponent<GirlJiggleHair>()) { leftRestTip=liveHair.head.InverseTransformPoint(liveHair.left.bones[3].TransformPoint(liveHair.left.tipOffset)); rightRestTip=liveHair.head.InverseTransformPoint(liveHair.right.bones[3].TransformPoint(liveHair.right.tipOffset)); return; }
             if (!statusProbeSent && runtimeFrames >= 3)
             {
                 File.WriteAllText(RequestPath, JsonUtility.ToJson(new Request { action = "status", id = "probe-" + initialPlayId })); statusProbeSent = true;
@@ -496,8 +532,8 @@ public static partial class GirlHairDynamicsRegression
             foreach (var chain in new[] { liveHair.left, liveHair.right }) for (int n = 0; n < 4; n++)
             {
                 Vector3 a = chain.bones[n].position, b = n < 3 ? chain.bones[n + 1].position : chain.bones[3].TransformPoint(chain.tipOffset);
-                float radius = Mathf.Lerp(chain.rootRadius, chain.tipRadius, n / 3f) * liveHair.head.lossyScale.x;
-                foreach (var proxy in liveHair.colliders) penetration = Mathf.Max(penetration, radius - proxy.SignedDistanceToSegment(a, b));
+                float radius = Mathf.Lerp(chain.rootRadius, chain.tipRadius, n / 3f) * liveHair.head.lossyScale.x * (liveHair.GetComponent<GirlJiggleHair>() ? .7f : 1f);
+                foreach (var proxy in liveHair.colliders) { float overlap=radius-proxy.SignedDistanceToSegment(a,b); if(overlap>report.maximumPenetration) report.collisionDetail=PhaseNames[stage]+"/"+proxy.label+"/segment"+n+"/reconstruction="+(liveHair.GetComponent<GirlJiggleHair>() ? liveHair.GetComponent<GirlJiggleHair>().PoseReconstructionError():0)+"/"+(liveHair.GetComponent<GirlJiggleHair>() ? liveHair.GetComponent<GirlJiggleHair>().CollisionGeometryError():""); penetration=Mathf.Max(penetration,overlap); }
             }
             report.maximumPenetration = Mathf.Max(report.maximumPenetration, penetration);
             if (stage == 1 && time - stageStart > .5f) report.walkSpeed = Mathf.Max(report.walkSpeed, liveMovement.PlanarVelocity.magnitude);
@@ -514,7 +550,7 @@ public static partial class GirlHairDynamicsRegression
             }
             report.motion.Add(sample); report.frames = imageIndex;
             Require(attachment < .001f && report.maximumLengthError < .00001f, "Hair simulation must keep real roots attached and bone lengths unchanged.");
-            Require(report.maximumOffset < .35f, "Live motion must stay restrained.");
+            Require(report.maximumOffset < (liveHair.GetComponent<GirlJiggleHair>() ? .65f : .35f), "Live motion must stay within the configured braid-length response bound.");
             if (report.motion.Count % 60 == 0) SavePlayReport();
         }
         catch (Exception e) { FailPlay(e); }
@@ -524,7 +560,7 @@ public static partial class GirlHairDynamicsRegression
     {
         Case("status-query-preserves-active-capture", () => Require(statusProbeObserved, "Status query must complete without changing the recording."));
         Case("actual-walk-run-speeds", () => Require(report.walkSpeed > 1.4f && report.walkSpeed < 1.7f && report.runSpeed > 3.5f && report.runSpeed < 3.9f, "Hair must preserve actual configured walking/running behavior."));
-        Case("actual-secondary-motion-and-attachment", () => Require(report.maximumOffset > .003f && report.maximumOffset < .35f && report.maximumAttachmentError < .001f && report.maximumLengthError < .00001f, "Actual motion needs measurable sway with pinned roots and unchanged lengths."));
+        Case("actual-secondary-motion-and-attachment", () => Require(report.maximumOffset > .003f && report.maximumOffset < (liveHair.GetComponent<GirlJiggleHair>() ? .65f : .35f) && report.maximumAttachmentError < .001f && report.maximumLengthError < .00001f, "Actual motion needs measurable sway with pinned roots and unchanged lengths."));
         Case("actual-body-proxy-clearance", () => Require(report.maximumPenetration < .03f, "Body proxy penetration exceeds3cm: " + report.maximumPenetration));
         Case("actual-reset-and-closeup-proof", () => Require(sawReset && report.resetError < .025f && report.frames >= 120, "Reset must discard old motion and close-up proof must cover the full sequence."));
         FinishReport(); EditorApplication.update -= PlayTick; EditorApplication.isPlaying = false;

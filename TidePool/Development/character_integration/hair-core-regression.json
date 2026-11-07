@@ -1,0 +1,80 @@
+{
+    "id": "0dd95c1a-e42c-47bb-91df-40fa3181c0c3",
+    "mode": "test",
+    "date": "2026-11-06T21:18:39",
+    "status": "passed",
+    "scene": "Assets/_Game/Scenes/PoolHall_ArmLab_01.unity",
+    "frameDirectory": "",
+    "passed": true,
+    "playing": false,
+    "compiling": false,
+    "dirty": false,
+    "frames": 0,
+    "maximumOffset": 0.0,
+    "maximumPenetration": 0.0,
+    "maximumAttachmentError": 0.0,
+    "maximumLengthError": 0.0,
+    "resetError": 0.0,
+    "walkSpeed": 0.0,
+    "runSpeed": 0.0,
+    "motion": [],
+    "cases": [
+        {
+            "name": "inertia-root-and-length",
+            "error": "",
+            "passed": true
+        },
+        {
+            "name": "settles-without-rest-pose-feedback",
+            "error": "",
+            "passed": true
+        },
+        {
+            "name": "frame-rate-30-60-120",
+            "error": "",
+            "passed": true
+        },
+        {
+            "name": "reset-notification-rebuilds-at-final-pose",
+            "error": "",
+            "passed": true
+        },
+        {
+            "name": "teleport-long-frame-and-zero-delta",
+            "error": "",
+            "passed": true
+        },
+        {
+            "name": "disable-restores-reference",
+            "error": "",
+            "passed": true
+        },
+        {
+            "name": "live-binding-change-recovers-without-exceptions",
+            "error": "",
+            "passed": true
+        },
+        {
+            "name": "uniform-scale-collision-radius",
+            "error": "",
+            "passed": true
+        },
+        {
+            "name": "capsule-segment-projection",
+            "error": "",
+            "passed": true
+        }
+    ],
+    "errors": [],
+    "rig": [],
+    "scalpCenterInHead": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "scalpExtents": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    }
+}

@@ -1,5 +1,5 @@
 {
-    "date": "2026-11-06T18:43:49",
+    "date": "2026-11-06T21:21:22",
     "scene": "Assets/_Game/Scenes/PoolHall_ArmLab_01.unity",
     "mode": "test",
     "status": "passed",
@@ -206,7 +206,7 @@
         {
             "name": "moving-run-held",
             "samplesPath": "E:\\Coding\\personal\\TIDEPOOL\\TidePool\\Library\\JumpSequenceVerification\\moving-run-held-samples.json",
-            "continuousFramesDirectory": "E:\\Coding\\personal\\TIDEPOOL\\TidePool\\Library\\JumpSequenceVerification\\moving-run-held-20261106-184357",
+            "continuousFramesDirectory": "E:\\Coding\\personal\\TIDEPOOL\\TidePool\\Library\\JumpSequenceVerification\\moving-run-held-20261106-212132",
             "passed": true,
             "launches": 1,
             "preparationSamples": 32,

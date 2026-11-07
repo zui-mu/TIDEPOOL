@@ -20,6 +20,8 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Metres per second squared. Zero preserves the original instant movement.")]
     [SerializeField, Min(0f)] private float acceleration;
 
+    public event System.Action MotionReset;
+
     private CharacterController controller;
     private float verticalVelocity;
     private Vector3 requestedVelocity;
@@ -68,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
         VerticalSpeed = verticalVelocity = 0f;
         IsGrounded = HasMotionSample = HitCeiling = false;
         jumpHandler?.CancelJump();
+        MotionReset?.Invoke();
     }
     private void Update()
     {

@@ -103,16 +103,12 @@ namespace TidePool.GiantHand.AutoGrasp
                 reachProgress
             );
 
-            output.wristRotation =
-                output.palmRotation
-                * Quaternion.Inverse(
-                    rig.palmRotationInWrist
-                );
-
-            output.wristPosition =
-                output.palmPosition
-                - output.wristRotation
-                * rig.palmPositionInWrist;
+            Pose wristTarget = WristPalmPose.ToWrist(
+                new Pose(output.palmPosition, output.palmRotation),
+                new Pose(rig.palmPositionInWrist, rig.palmRotationInWrist)
+            );
+            output.wristPosition = wristTarget.position;
+            output.wristRotation = wristTarget.rotation;
 
             float halfBand = Mathf.Min(
                 settings.contactBandHalfHeight,

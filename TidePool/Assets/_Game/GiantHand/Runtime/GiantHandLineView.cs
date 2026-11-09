@@ -10,6 +10,7 @@ public class GiantHandLineView : MonoBehaviour
     public Transform upperArm;
     public Transform forearm;
     public Transform wrist;
+    public Transform[] armJoints;
 
     [Header("Rendering")]
     public LineRenderer palmLine;
@@ -27,8 +28,8 @@ public class GiantHandLineView : MonoBehaviour
 
     private LineRenderer armLine;
 
-    // 数组只创建一次，之后每帧更新里面的坐标。
-    private readonly Vector3[] armPoints = new Vector3[3];
+    // 关节数量变化时调整数组，其余帧只更新坐标。
+    private Vector3[] armPoints = new Vector3[3];
     private readonly Vector3[] palmPoints = new Vector3[4];
 
     private void Awake()
@@ -38,13 +39,9 @@ public class GiantHandLineView : MonoBehaviour
 
     private void LateUpdate()
     {
-        if(armLine==null) armLine=GetComponent<LineRenderer>();
+        if (armLine == null) armLine = GetComponent<LineRenderer>();
         if (armLine == null) return;
-        bool ready =
-            upperArm != null &&
-            forearm != null &&
-            wrist != null &&
-            lineMaterial != null;
+        bool ready = wrist != null && lineMaterial != null && TryUpdateArmPoints();
 
         armLine.enabled = ready;
 
@@ -54,12 +51,7 @@ public class GiantHandLineView : MonoBehaviour
         if (!ready)
             return;
 
-        // 实际骨架：上臂根部 → 肘部 → 手腕。
         ConfigureLine(armLine, false);
-
-        armPoints[0] = upperArm.position;
-        armPoints[1] = forearm.position;
-        armPoints[2] = wrist.position;
 
         armLine.positionCount = armPoints.Length;
         armLine.SetPositions(armPoints);
@@ -87,6 +79,38 @@ public class GiantHandLineView : MonoBehaviour
 
         palmLine.positionCount = palmPoints.Length;
         palmLine.SetPositions(palmPoints);
+    }
+
+    private bool TryUpdateArmPoints()
+    {
+        if (armJoints == null || armJoints.Length == 0)
+        {
+            if (upperArm == null || forearm == null)
+                return false;
+
+            if (armPoints.Length != 3)
+                armPoints = new Vector3[3];
+
+            armPoints[0] = upperArm.position;
+            armPoints[1] = forearm.position;
+            armPoints[2] = wrist.position;
+            return true;
+        }
+
+        if (armJoints.Length < 2)
+            return false;
+
+        if (armPoints.Length != armJoints.Length)
+            armPoints = new Vector3[armJoints.Length];
+
+        for (int i = 0; i < armJoints.Length; i++)
+        {
+            if (armJoints[i] == null)
+                return false;
+
+            armPoints[i] = armJoints[i].position;
+        }
+        return true;
     }
 
     private void ConfigureLine(LineRenderer line, bool loop)

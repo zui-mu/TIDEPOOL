@@ -11,6 +11,8 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
     [Min(1f)] public float turnSpeed = 720f;
     [Min(0f)] public float animationDamping = .08f;
     [Header("Full jump clip landmarks (source frames)")]
+    [SerializeField, Min(0f)] float movingPreparationFrames = 3f;
+    [SerializeField, Min(1f)] float movingLandingFrames = 5f;
     [SerializeField, Min(0f)] float takeoffFrame = 19f;
     [SerializeField, Min(0f)] float apexFrame = 25f;
     [SerializeField, Min(0f)] float contactFrame = 30f;
@@ -92,10 +94,13 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
         if (!InfrastructureReady) return false;
         if (jumpPhase != JumpPhase.Idle || animator.IsInTransition(0) ||
             !animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion")) return true;
-        // Latch input intent once: W+Space from rest is moving; later input cannot change the type.
-        movingJump = hasMovementInput;
-        jumpPhase = JumpPhase.Preparing; sourceFrame = 0f; fallOnly = false;
-        animator.SetFloat(JumpTime, 0f);
+        movingJump = movement.HasMotionSample
+                     && movement.PlanarVelocity.sqrMagnitude > 0.2f * 0.2f;
+
+        jumpPhase = JumpPhase.Preparing;
+        sourceFrame = movingJump ? Mathf.Max(0f, takeoffFrame - movingPreparationFrames) : 0f;
+        fallOnly = false;
+        animator.SetFloat(JumpTime, sourceFrame / lastFrame);
         WriteFlags();
         return true;
     }
@@ -122,6 +127,7 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
     }
     void BeginRecovery()
     {
+        movingJump = movement.PlanarVelocity.sqrMagnitude > 0.2f * 0.2f;
         jumpPhase = JumpPhase.Recovery; recoveryFrame = contactFrame;
         animator.SetFloat(LandingTime, recoveryFrame / lastFrame);
         WriteFlags();
@@ -195,11 +201,24 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
                 AdvanceFlight();
                 break;
             case JumpPhase.Recovery:
+            {
                 if (!stableGrounded) { BeginFall(); break; }
-                recoveryFrame = Mathf.Min(lastFrame, recoveryFrame + jumpClip.frameRate * Time.deltaTime);
+
+                float endFrame = movingJump
+                    ? Mathf.Min(lastFrame, contactFrame + movingLandingFrames)
+                    : lastFrame;
+
+                recoveryFrame = Mathf.Min(endFrame, recoveryFrame + jumpClip.frameRate * Time.deltaTime);
                 animator.SetFloat(LandingTime, recoveryFrame / lastFrame);
-                if (recoveryFrame >= lastFrame) { jumpPhase = JumpPhase.Idle; movingJump = false; WriteFlags(); }
+
+                if (recoveryFrame >= endFrame)
+                {
+                    jumpPhase = JumpPhase.Idle;
+                    movingJump = false;
+                    WriteFlags();
+                }
                 break;
+            }
         }
     }
 }

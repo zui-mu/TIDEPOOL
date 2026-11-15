@@ -30,19 +30,10 @@ namespace TidePool.GiantHand
                 return false;
             }
 
-            double reach = 0d;
-            double longest = 0d;
-            for (int i = 0; i < segmentLengths.Count; i++)
+            if (!TryGetLengthBounds(segmentLengths, out double longest, out double reach))
             {
-                float length = segmentLengths[i];
-                if (!IsFinite(length) || length <= 0f)
-                {
-                    message = "Arc requires finite, positive segment lengths.";
-                    return false;
-                }
-
-                reach += length;
-                longest = Math.Max(longest, length);
+                message = "Arc requires finite, positive segment lengths.";
+                return false;
             }
 
             double distance = GetDirectionAndDistance(root, target, out Vector3 chordDirection);
@@ -154,6 +145,48 @@ namespace TidePool.GiantHand
 
             q = 0d;
             return false;
+        }
+
+        internal static bool TryGetReachLimits(IReadOnlyList<float> lengths, out float minimum, out float maximum)
+        {
+            minimum = 0f;
+            maximum = 0f;
+            if (!TryGetLengthBounds(lengths, out double lower, out double total))
+                return false;
+
+            // For a semicircle, the half-angles sum to PI/2 and its diameter is the wrist distance.
+            double upper = total;
+            for (int i = 0; i < 40 && upper > lower; i++)
+            {
+                double diameter = (lower + upper) * 0.5d;
+                if (SumHalfAngles(lengths, diameter, 1d) > Math.PI / 2d)
+                    lower = diameter;
+                else
+                    upper = diameter;
+            }
+
+            minimum = (float)upper;
+            maximum = (float)total;
+            return true;
+        }
+
+        private static bool TryGetLengthBounds(IReadOnlyList<float> lengths, out double longest, out double total)
+        {
+            longest = 0d;
+            total = 0d;
+            if (lengths == null || lengths.Count == 0)
+                return false;
+
+            for (int i = 0; i < lengths.Count; i++)
+            {
+                float length = lengths[i];
+                if (!IsFinite(length) || length <= 0f)
+                    return false;
+
+                longest = Math.Max(longest, length);
+                total += length;
+            }
+            return true;
         }
 
         private static double SumHalfAngles(IReadOnlyList<float> lengths, double distance, double q)

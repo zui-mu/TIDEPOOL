@@ -28,6 +28,9 @@ namespace TidePool.GiantHand
 
         private float[] segmentLengths = Array.Empty<float>();
         private Pose[] worldPoses = Array.Empty<Pose>();
+        private bool reachLimitsValid;
+        private float minimumReach;
+        private float maximumReach;
 
         private void LateUpdate() => Refresh();
 
@@ -57,6 +60,38 @@ namespace TidePool.GiantHand
             return IsSolved;
         }
 
+        internal bool TryClampWristTarget(Vector3 desiredTarget, out Vector3 reachableTarget)
+        {
+            reachableTarget = desiredTarget;
+            if (!isActiveAndEnabled || ValidateChain() != null)
+                return false;
+
+            if (!reachLimitsValid)
+            {
+                if (!UnequalCircularArcSolver.TryGetReachLimits(segmentLengths, out minimumReach, out maximumReach))
+                    return false;
+
+                // Leave room for world-position rounding at the semicircle limit.
+                minimumReach = Mathf.Min(maximumReach, minimumReach + 0.0001f);
+                reachLimitsValid = true;
+            }
+
+            Vector3 root = joints[0].position;
+            Vector3 chord = desiredTarget - root;
+            float distance = chord.magnitude;
+            if (float.IsNaN(distance) || float.IsInfinity(distance))
+                return false;
+            if (distance >= minimumReach && distance <= maximumReach)
+                return true;
+
+            Vector3 axis = distance > 0.0001f ? chord / distance : (wristTarget.position - root).normalized;
+            if (axis == Vector3.zero)
+                axis = Vector3.forward;
+
+            reachableTarget = root + Mathf.Clamp(distance, minimumReach, maximumReach) * axis;
+            return true;
+        }
+
         private string ValidateChain()
         {
             if (joints == null || joints.Length < 2 || joints[0] == null ||
@@ -74,7 +109,10 @@ namespace TidePool.GiantHand
             }
 
             if (segmentLengths.Length != joints.Length - 1)
+            {
                 segmentLengths = new float[joints.Length - 1];
+                reachLimitsValid = false;
+            }
 
             for (int i = 1; i < joints.Length; i++)
             {
@@ -90,7 +128,11 @@ namespace TidePool.GiantHand
                       Mathf.Abs(offset.y) <= BasisTolerance && Mathf.Abs(offset.z) <= BasisTolerance))
                     return "Unsupported arm offset. Each child must be translated along its parent's positive X axis.";
 
-                segmentLengths[i - 1] = offset.x;
+                if (segmentLengths[i - 1] != offset.x)
+                {
+                    segmentLengths[i - 1] = offset.x;
+                    reachLimitsValid = false;
+                }
             }
             return null;
         }

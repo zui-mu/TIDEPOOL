@@ -18,8 +18,25 @@ namespace TidePool.GiantHand
             out Pose[] childLocalPoses,
             out string message)
         {
+            return TrySolve(root, target, pole, segmentCount, segmentLength, null,
+                out rootWorld, out childLocalPoses, out _, out message);
+        }
+
+        internal static bool TrySolve(
+            Vector3 root,
+            Vector3 target,
+            Vector3 pole,
+            int segmentCount,
+            float segmentLength,
+            Quaternion? previousPlane,
+            out Pose rootWorld,
+            out Pose[] childLocalPoses,
+            out Quaternion plane,
+            out string message)
+        {
             rootWorld = default;
             childLocalPoses = Array.Empty<Pose>();
+            plane = Quaternion.identity;
 
             if (segmentCount < 1 || !IsFinite(segmentLength) || segmentLength <= 0f ||
                 !IsFinite(root) || !IsFinite(target) || !IsFinite(pole))
@@ -29,12 +46,6 @@ namespace TidePool.GiantHand
             }
 
             double distance = GetDirectionAndDistance(root, target, out Vector3 chordDirection);
-            if (distance == 0d)
-            {
-                message = "Arc target and root coincide, so the chord has no direction.";
-                return false;
-            }
-
             double reach = (double)segmentLength * segmentCount;
             double reachError = (distance - reach) / reach;
             bool isStraight = Math.Abs(reachError) <= StraightTolerance;
@@ -47,8 +58,15 @@ namespace TidePool.GiantHand
             GetDirectionAndDistance(root, pole, out Vector3 poleDirection);
             Vector3 normal = Vector3.Cross(chordDirection, poleDirection);
             float normalLength = normal.magnitude;
-            Quaternion plane;
-            if (normalLength > PoleAngleTolerance)
+            if (distance == 0d)
+            {
+                // The chord direction vanishes at closure. Reuse its full frame to keep
+                // the same winding. On a cold start, align the bend side with the pole.
+                plane = previousPlane ?? (poleDirection.sqrMagnitude > 0f
+                    ? Quaternion.FromToRotation(Vector3.up, poleDirection)
+                    : Quaternion.identity);
+            }
+            else if (normalLength > PoleAngleTolerance)
             {
                 normal /= normalLength;
                 Vector3 bendDirection = Vector3.Cross(normal, chordDirection);
@@ -88,6 +106,12 @@ namespace TidePool.GiantHand
 
         private static bool TrySolveTurn(int segmentCount, double chordInLinks, out double turn)
         {
+            if (chordInLinks == 0d)
+            {
+                turn = 2d * Math.PI / segmentCount;
+                return true;
+            }
+
             // The circular chord equation sin(n * turn / 2) / sin(turn / 2) = distance / length
             // becomes the Chebyshev polynomial U_(n-1)(cos(turn / 2)), including the straight limit.
             double lowerCosine = Math.Cos(Math.PI / segmentCount);

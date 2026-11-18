@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 // Physics owns displacement; this component owns the complete animation's phase clocks.
 [DisallowMultipleComponent]
@@ -24,6 +25,7 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
     float airborneTime, sourceFrame, fallingFrame, recoveryFrame, lastFrame;
     uint launchBeforeRequest;
     bool registered, fallOnly, movingJump;
+    bool danceAvailable, danceActive;
     static readonly int MoveSpeed = Animator.StringToHash("MoveSpeed");
     static readonly int Grounded = Animator.StringToHash("Grounded");
     static readonly int VerticalSpeed = Animator.StringToHash("VerticalSpeed");
@@ -33,6 +35,8 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
     static readonly int JumpTime = Animator.StringToHash("JumpTime");
     static readonly int LandingTime = Animator.StringToHash("LandingTime");
     static readonly int FallTime = Animator.StringToHash("FallTime");
+    static readonly int DanceActive = Animator.StringToHash("DanceActive");
+    static readonly int SalsaState = Animator.StringToHash("Base Layer.Salsa");
 
     bool InfrastructureReady => movement && movement.isActiveAndEnabled && animator &&
         animator.isActiveAndEnabled && visualRoot && boundController && animator.runtimeAnimatorController == boundController;
@@ -79,6 +83,8 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
         if (!movement.RegisterJumpHandler(this)) return false;
         registered = true;
         boundController = animator.runtimeAnimatorController;
+        danceAvailable = HasParameter(DanceActive, AnimatorControllerParameterType.Bool) &&
+            animator.HasState(0, SalsaState);
         animator.applyRootMotion = false;
         CancelJump();
         return true;
@@ -87,13 +93,17 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
     {
         CancelJump();
         if (movement) movement.UnregisterJumpHandler(this);
-        registered = false; boundController = null; jumpClip = null;
+        registered = false; boundController = null; jumpClip = null; danceAvailable = false;
     }
     public bool HandleJumpRequest(bool hasMovementInput)
     {
         if (!InfrastructureReady) return false;
-        if (jumpPhase != JumpPhase.Idle || animator.IsInTransition(0) ||
-            !animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion")) return true;
+        bool leavingSalsa = danceAvailable && (danceActive ||
+            animator.GetCurrentAnimatorStateInfo(0).fullPathHash == SalsaState ||
+            (animator.IsInTransition(0) && animator.GetNextAnimatorStateInfo(0).fullPathHash == SalsaState));
+        if (leavingSalsa) SetDanceActive(false);
+        if (jumpPhase != JumpPhase.Idle || (!leavingSalsa &&
+            (animator.IsInTransition(0) || !animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion")))) return true;
         movingJump = movement.HasMotionSample
                      && movement.PlanarVelocity.sqrMagnitude > 0.2f * 0.2f;
 
@@ -108,6 +118,7 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
     {
         if (movement) movement.CancelPendingAnimatedJump(this);
         jumpPhase = JumpPhase.Idle; fallOnly = movingJump = false; airborneTime = 0f;
+        SetDanceActive(false);
         // Keep outgoing pose clocks intact while blending back to locomotion.
         WriteFlags();
     }
@@ -117,6 +128,27 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
         animator.SetBool(JumpActive, jumpPhase != JumpPhase.Idle);
         animator.SetBool(JumpLanding, jumpPhase == JumpPhase.Recovery);
         animator.SetBool(FallOnly, fallOnly);
+    }
+    void SetDanceActive(bool active)
+    {
+        danceActive = active;
+        if (danceAvailable && animator && boundController && animator.runtimeAnimatorController == boundController)
+            animator.SetBool(DanceActive, active);
+    }
+    void UpdateDance(float speed)
+    {
+        if (!danceAvailable) return;
+        bool toggle = Keyboard.current?.tKey.wasPressedThisFrame == true;
+        bool canDance = movement.IsGrounded && speed <= .035f && jumpPhase == JumpPhase.Idle;
+        if (danceActive)
+        {
+            if (toggle || !canDance) SetDanceActive(false);
+        }
+        else if (toggle && canDance && !animator.IsInTransition(0) &&
+            animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion"))
+        {
+            SetDanceActive(true);
+        }
     }
     void BeginFall()
     {
@@ -171,6 +203,7 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
         animator.SetBool(Grounded, stableGrounded);
         animator.SetFloat(VerticalSpeed, movement.VerticalSpeed);
         if (Time.deltaTime <= 0f) return;
+        UpdateDance(speed);
         switch (jumpPhase)
         {
             case JumpPhase.Idle:

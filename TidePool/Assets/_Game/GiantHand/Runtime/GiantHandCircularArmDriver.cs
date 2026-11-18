@@ -26,14 +26,14 @@ namespace TidePool.GiantHand
         public float MaxBoneLengthError => maxBoneLengthError;
         public bool IsSolved { get; private set; }
 
-        private float[] segmentLengths = Array.Empty<float>();
         private Pose[] worldPoses = Array.Empty<Pose>();
+        private Quaternion? lastBendPlane;
 
         private void LateUpdate() => Refresh();
 
         public bool Refresh()
         {
-            solverStatus = ValidateChain();
+            solverStatus = ValidateChain(out float segmentLength);
             if (solverStatus != null)
             {
                 IsSolved = false;
@@ -43,22 +43,48 @@ namespace TidePool.GiantHand
             }
 
             Vector3 targetPosition = wristTarget.position;
-            IsSolved = TryApplyPose(targetPosition, out solverStatus);
+            IsSolved = TryApplyPose(targetPosition, segmentLength, out solverStatus);
             if (IsSolved)
                 solverStatus = "Target reached.";
 
             wristError = Vector3.Distance(joints[joints.Length - 1].position, targetPosition);
             maxBoneLengthError = 0f;
-            for (int i = 0; i < segmentLengths.Length; i++)
+            for (int i = 0; i < joints.Length - 1; i++)
             {
                 float actualLength = Vector3.Distance(joints[i].position, joints[i + 1].position);
-                maxBoneLengthError = Mathf.Max(maxBoneLengthError, Mathf.Abs(actualLength - segmentLengths[i]));
+                maxBoneLengthError = Mathf.Max(maxBoneLengthError, Mathf.Abs(actualLength - segmentLength));
             }
             return IsSolved;
         }
 
-        private string ValidateChain()
+        internal bool TryClampWristTarget(Vector3 desiredTarget, out Vector3 reachableTarget)
         {
+            reachableTarget = desiredTarget;
+            if (!isActiveAndEnabled || ValidateChain(out float segmentLength) != null)
+                return false;
+
+            int segmentCount = joints.Length - 1;
+            float maximumReach = segmentCount * segmentLength;
+
+            Vector3 root = joints[0].position;
+            Vector3 chord = desiredTarget - root;
+            float distance = chord.magnitude;
+            if (float.IsNaN(distance) || float.IsInfinity(distance))
+                return false;
+            if (distance <= maximumReach && (segmentCount > 1 || distance == maximumReach))
+                return true;
+
+            Vector3 axis = distance > 0.0001f ? chord / distance : (wristTarget.position - root).normalized;
+            if (axis == Vector3.zero)
+                axis = Vector3.forward;
+
+            reachableTarget = root + maximumReach * axis;
+            return true;
+        }
+
+        private string ValidateChain(out float segmentLength)
+        {
+            segmentLength = 0f;
             if (joints == null || joints.Length < 2 || joints[0] == null ||
                 wristTarget == null || elbowPole == null)
                 return "Assign the arm joints, wrist target, and elbow pole.";
@@ -72,9 +98,6 @@ namespace TidePool.GiantHand
                 if (!HasUnitScale(ancestor))
                     return "Unsupported arm scale. The chain and its ancestors must have unit scale.";
             }
-
-            if (segmentLengths.Length != joints.Length - 1)
-                segmentLengths = new float[joints.Length - 1];
 
             for (int i = 1; i < joints.Length; i++)
             {
@@ -90,16 +113,21 @@ namespace TidePool.GiantHand
                       Mathf.Abs(offset.y) <= BasisTolerance && Mathf.Abs(offset.z) <= BasisTolerance))
                     return "Unsupported arm offset. Each child must be translated along its parent's positive X axis.";
 
-                segmentLengths[i - 1] = offset.x;
+                if (i == 1)
+                    segmentLength = offset.x;
+                else if (Mathf.Abs(offset.x - segmentLength) > BasisTolerance)
+                    return "Circular arm requires equal bone lengths.";
             }
             return null;
         }
 
-        private bool TryApplyPose(Vector3 targetPosition, out string message)
+        private bool TryApplyPose(Vector3 targetPosition, float segmentLength, out string message)
         {
-            if (!UnequalCircularArcSolver.TrySolve(
-                    joints[0].position, targetPosition, elbowPole.position, segmentLengths,
-                    out Pose rootWorld, out Pose[] childLocalPoses, out message))
+            Vector3 root = joints[0].position;
+            int segmentCount = joints.Length - 1;
+            if (!CircularArcSolver.TrySolve(
+                    root, targetPosition, elbowPole.position, segmentCount, segmentLength, lastBendPlane,
+                    out Pose rootWorld, out Pose[] childLocalPoses, out Quaternion bendPlane, out message))
                 return false;
 
             // Verify the candidate against the offsets the Unity hierarchy will actually use.
@@ -118,10 +146,10 @@ namespace TidePool.GiantHand
                 return false;
             }
 
-            for (int i = 0; i < segmentLengths.Length; i++)
+            for (int i = 0; i < segmentCount; i++)
             {
                 float length = Vector3.Distance(worldPoses[i].position, worldPoses[i + 1].position);
-                if (!(Mathf.Abs(length - segmentLengths[i]) <= PositionTolerance))
+                if (!(Mathf.Abs(length - segmentLength) <= PositionTolerance))
                 {
                     message = "Circular arm FK changed a bone length.";
                     return false;
@@ -137,6 +165,7 @@ namespace TidePool.GiantHand
                 Quaternion parentRotation = worldPoses[wristIndex - 1].rotation;
                 joints[wristIndex].localRotation = Quaternion.Inverse(parentRotation) * wristTarget.rotation;
             }
+            lastBendPlane = bendPlane;
             return true;
         }
 

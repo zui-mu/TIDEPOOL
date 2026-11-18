@@ -65,13 +65,13 @@ public sealed class PoolLetterPickup : MonoBehaviour
         body.normal.textColor=new Color(.13f,.17f,.2f);
         if (shortItalicNote)
         {
-            body.font = Font.CreateDynamicFontFromOSFont(new[] { "Georgia", "Times New Roman", "Arial" }, 26);
+            body.font = Font.CreateDynamicFontFromOSFont(new[] { "Georgia", "Times New Roman", "Arial" }, 32);
             body.fontStyle = FontStyle.Italic;
-            body.fontSize = 26;
+            body.fontSize = 32;
             body.alignment = TextAnchor.MiddleCenter;
         }
         title=new GUIStyle(body){fontSize=30,alignment=TextAnchor.MiddleLeft};
-        hint=new GUIStyle(GUI.skin.label){font=letterFont,fontSize=20,alignment=TextAnchor.MiddleCenter};
+        hint=new GUIStyle(GUI.skin.label){font=letterFont,fontSize=20,alignment=TextAnchor.MiddleCenter,wordWrap=true};
     }
     void OnGUI()
     {
@@ -79,19 +79,24 @@ public sealed class PoolLetterPickup : MonoBehaviour
         EnsureStyles();
         if(!IsReading)
         {
-            GUI.Box(new Rect(Screen.width/2-165,Screen.height-170,330,52),GUIContent.none);
-            GUI.Label(new Rect(Screen.width/2-160,Screen.height-167,320,45),"E  拾起池底的信",hint);return;
+            float hintWidth = Mathf.Min(510f, Screen.width - 32f);
+            Rect hintBox = new Rect((Screen.width - hintWidth) / 2f, Screen.height - 170, hintWidth, 58f);
+            GUI.Box(hintBox, GUIContent.none);
+            GUI.Label(new Rect(hintBox.x + 12f, hintBox.y, hintBox.width - 24f, hintBox.height),
+                "[E] Pick up the letter at the bottom of the pool", hint);
+            return;
         }
         // The letter leaves a margin of the live scene visible. Water never pauses behind it.
         float scale=Mathf.Min(1f,Screen.height/850f);
         Matrix4x4 before=GUI.matrix;GUI.matrix=Matrix4x4.Scale(Vector3.one*scale);
         float width=Screen.width/scale,height=Screen.height/scale;
-        float paperHeight = shortItalicNote ? 240f : 650f;
-        Rect paper = new Rect(width / 2 - 285, Mathf.Max(24, (height - paperHeight) / 2), 570, paperHeight);
+        float paperHeight = shortItalicNote ? 265f : 650f;
+        float paperWidth = shortItalicNote ? Mathf.Min(640f, width - 48f) : 570f;
+        Rect paper = new Rect((width - paperWidth) / 2f, Mathf.Max(24, (height - paperHeight) / 2), paperWidth, paperHeight);
         Color old=GUI.color;GUI.color=new Color(.9f,.92f,.9f,.98f);GUI.DrawTexture(paper,Texture2D.whiteTexture);GUI.color=old;
         if (shortItalicNote)
         {
-            GUI.Label(new Rect(paper.x + 40, paper.y + 30, 490, 120), letterText, body);
+            GUI.Label(new Rect(paper.x + 32f, paper.y + 24f, paper.width - 64f, 132f), letterText, body);
         }
         else
         {
@@ -99,7 +104,8 @@ public sealed class PoolLetterPickup : MonoBehaviour
             GUI.Label(new Rect(paper.x+48,paper.y+116,474,420),letterText,body);
         }
         string closeLabel = shortItalicNote ? "Close  [E / Esc]" : "放下信件，返回场景  [E / Esc]";
-        if (GUI.Button(new Rect(paper.x + 120, paper.yMax - 80, 330, 44), closeLabel)) CloseLetter();
+        float buttonWidth = Mathf.Min(330f, paper.width - 48f);
+        if (GUI.Button(new Rect(paper.center.x - buttonWidth / 2f, paper.yMax - 80, buttonWidth, 44), closeLabel)) CloseLetter();
         GUI.matrix=before;
     }
 }

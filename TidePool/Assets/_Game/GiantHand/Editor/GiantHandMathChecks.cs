@@ -12,9 +12,11 @@ namespace TidePool.GiantHand.Editor
         {
             CheckForwardKinematics();
             CheckWristPalmRoundTrip();
+            CheckPalmRollKeepsPole();
             CheckGeneratedWristTarget();
             CheckCircularArc();
-            Debug.Log("GiantHand math checks passed: FK, wrist/palm, grasp target, circular arc.");
+            CheckCircularArmDriver();
+            Debug.Log("GiantHand math checks passed: FK, wrist/palm, grasp target, circular arc, arm driver.");
         }
 
         private static void CheckForwardKinematics()
@@ -82,6 +84,49 @@ namespace TidePool.GiantHand.Editor
             ExpectVector(Vector3.right, targets.wristRotation * Vector3.up, "Generated wrist up");
         }
 
+        private static void CheckPalmRollKeepsPole()
+        {
+            GameObject fixture = new GameObject("Palm roll check") { hideFlags = HideFlags.HideAndDontSave };
+            try
+            {
+                Transform CreateControl(string name, Vector3 position)
+                {
+                    Transform node = new GameObject(name).transform;
+                    node.SetParent(fixture.transform, false);
+                    node.localPosition = position;
+                    return node;
+                }
+
+                Transform palm = CreateControl("Palm goal", new Vector3(40f, 0f, 0f));
+                Transform wrist = CreateControl("Wrist goal", Vector3.zero);
+                Transform pole = CreateControl("Bend pole", Vector3.zero);
+                var control = fixture.AddComponent<GiantHandPalmControl>();
+                using (var bindings = new SerializedObject(control))
+                {
+                    bindings.FindProperty("palmTarget").objectReferenceValue = palm;
+                    bindings.FindProperty("armRoot").objectReferenceValue = CreateControl("Shoulder", Vector3.zero);
+                    bindings.FindProperty("wristTarget").objectReferenceValue = wrist;
+                    bindings.FindProperty("elbowPole").objectReferenceValue = pole;
+                    bindings.ApplyModifiedPropertiesWithoutUndo();
+                }
+
+                Vector3 aboveChord = new Vector3(20f, 10f, 0f);
+                var refresh = typeof(GiantHandPalmControl).GetMethod("Refresh",
+                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                refresh.Invoke(control, new object[] { 0.05f });
+                ExpectVector(aboveChord, pole.position, "Palm facing down bends toward world up");
+
+                palm.rotation = Quaternion.AngleAxis(90f, Vector3.right);
+                refresh.Invoke(control, new object[] { 0.05f });
+                ExpectVector(palm.up, wrist.up, "Wrist follows palm roll");
+                ExpectVector(aboveChord, pole.position, "Palm roll leaves the pole above the chord");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(fixture);
+            }
+        }
+
         private static void CheckCircularArc()
         {
             const int count = 8;
@@ -120,6 +165,82 @@ namespace TidePool.GiantHand.Editor
             if (CircularArcSolver.TrySolve(root, root + 8f * axis, root, count, length,
                     out _, out _, out _))
                 throw new InvalidOperationException("Bent arc accepted a missing bend direction.");
+
+            if (!CircularArcSolver.TrySolve(root, root, root, count, length,
+                    out Pose closedRoot, out Pose[] closedLocals, out string closedMessage))
+                throw new InvalidOperationException(closedMessage);
+            var closedJoints = new Pose[count + 1];
+            SerialChainFk.Evaluate(closedRoot, closedLocals, closedJoints);
+            ExpectVector(root, closedJoints[count].position, "Closed arc wrist on a cold start");
+            ExpectNear(45f, Quaternion.Angle(Quaternion.identity, closedLocals[0].rotation),
+                "Closed octagon turn");
+        }
+
+        private static void CheckCircularArmDriver()
+        {
+            const float length = 6.9375f;
+            GameObject fixture = new GameObject("Circular arm check") { hideFlags = HideFlags.HideAndDontSave };
+            try
+            {
+                var joints = new Transform[9];
+                for (int i = 0; i < joints.Length; i++)
+                {
+                    joints[i] = new GameObject($"Joint {i}").transform;
+                    joints[i].SetParent(i == 0 ? fixture.transform : joints[i - 1], false);
+                    joints[i].localPosition = i == 0 ? Vector3.zero : length * Vector3.right;
+                }
+
+                Transform target = new GameObject("Wrist target").transform;
+                target.SetParent(fixture.transform, false);
+                target.SetPositionAndRotation(new Vector3(36f, 0f, 27f), Quaternion.AngleAxis(40f, Vector3.up));
+                Transform pole = new GameObject("Bend pole").transform;
+                pole.SetParent(fixture.transform, false);
+                pole.localPosition = Vector3.up;
+
+                var driver = fixture.AddComponent<GiantHandCircularArmDriver>();
+                using (var bindings = new SerializedObject(driver))
+                {
+                    SerializedProperty chain = bindings.FindProperty("joints");
+                    chain.arraySize = joints.Length;
+                    for (int i = 0; i < joints.Length; i++)
+                        chain.GetArrayElementAtIndex(i).objectReferenceValue = joints[i];
+                    bindings.FindProperty("wristTarget").objectReferenceValue = target;
+                    bindings.FindProperty("elbowPole").objectReferenceValue = pole;
+                    bindings.ApplyModifiedPropertiesWithoutUndo();
+                }
+
+                Transform wrist = joints[joints.Length - 1];
+                if (!driver.Refresh())
+                    throw new InvalidOperationException(driver.Status);
+                ExpectVector(target.position, wrist.position, "Arm driver wrist");
+                ExpectVector(target.right, wrist.right, "Arm driver wrist right");
+                ExpectVector(target.up, wrist.up, "Arm driver wrist up");
+                for (int i = 1; i < joints.Length; i++)
+                    ExpectNear(length, Vector3.Distance(joints[i - 1].position, joints[i].position), $"Arm driver bone {i}");
+
+                target.position = new Vector3(0.0008f, 0f, 0.0006f);
+                if (!driver.Refresh())
+                    throw new InvalidOperationException(driver.Status);
+                ExpectVector(target.position, wrist.position, "Arc beyond a semicircle");
+                Vector3 previousNormal = joints[0].forward;
+                Vector3 previousHeading = joints[0].right;
+
+                target.position = joints[0].position;
+                pole.position = Vector3.right;
+                if (!driver.Refresh())
+                    throw new InvalidOperationException(driver.Status);
+                ExpectVector(target.position, wrist.position, "Closed arm wrist");
+                ExpectVector(previousNormal, joints[0].forward, "Closed arm reused the bend plane");
+                ExpectVector(previousHeading, joints[0].right, "Closed arm reused the winding direction");
+
+                wrist.localPosition = (length + 0.5f) * Vector3.right;
+                if (driver.Refresh())
+                    throw new InvalidOperationException("The equal-length arm driver accepted a mixed-length chain.");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(fixture);
+            }
         }
 
         private static void ExpectVector(Vector3 expected, Vector3 actual, string label)

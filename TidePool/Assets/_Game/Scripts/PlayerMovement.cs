@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 requestedVelocity;
     private IPlayerJumpHandler jumpHandler;
     private bool animatedLaunchPending;
+    private Object movementLockOwner;
     public Vector3 PlanarVelocity { get; private set; }
     public float VerticalSpeed { get; private set; }
     public bool IsGrounded { get; private set; }
@@ -34,11 +35,56 @@ public class PlayerMovement : MonoBehaviour
     public float RunSpeed => runSpeed;
     public float JumpTakeoffSpeed => Mathf.Sqrt(Mathf.Max(0f, jumpHeight * -2f * gravity));
     public bool HasMotionSample { get; private set; }
+    public bool IsMovementLocked => movementLockOwner;
     public bool HitCeiling { get; private set; }
     public uint JumpLaunchSequence { get; private set; }
 
     private void Awake() { controller = GetComponent<CharacterController>(); }
-    private void OnDisable() { ResetMotion(); }
+    private void OnDisable()
+    {
+        movementLockOwner = null;
+        ResetMotion();
+    }
+
+    public bool TryLockMovement(Object owner)
+    {
+        if (!owner || !isActiveAndEnabled || !controller || !controller.enabled ||
+            (movementLockOwner && movementLockOwner != owner))
+            return false;
+
+        if (movementLockOwner == owner)
+            return true;
+
+        movementLockOwner = owner;
+        ResetMotion();
+        IsGrounded = controller.isGrounded;
+        HasMotionSample = true;
+        return true;
+    }
+
+    public bool IsMovementLockedBy(Object owner) => owner && movementLockOwner == owner;
+
+    internal bool TryMoveWhileLocked(Object owner, float targetWorldHeight, out CollisionFlags flags)
+    {
+        flags = CollisionFlags.None;
+        if (!IsMovementLockedBy(owner) || !isActiveAndEnabled || !controller || !controller.enabled ||
+            float.IsNaN(targetWorldHeight) || float.IsInfinity(targetWorldHeight))
+            return false;
+
+        float delta = targetWorldHeight - transform.position.y;
+        if (Mathf.Abs(delta) > 0.00001f)
+            flags = controller.Move(delta * Vector3.up);
+        IsGrounded = controller.isGrounded || (flags & CollisionFlags.Below) != 0;
+        HitCeiling = (flags & CollisionFlags.Above) != 0;
+        HasMotionSample = true;
+        return true;
+    }
+
+    public void ReleaseMovementLock(Object owner)
+    {
+        if (IsMovementLockedBy(owner))
+            movementLockOwner = null;
+    }
 
     public bool RegisterJumpHandler(IPlayerJumpHandler handler)
     {
@@ -54,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public bool QueueAnimatedJump(IPlayerJumpHandler handler)
     {
-        if (!ReferenceEquals(jumpHandler, handler) || !isActiveAndEnabled || !controller ||
+        if (movementLockOwner || !ReferenceEquals(jumpHandler, handler) || !isActiveAndEnabled || !controller ||
             !controller.enabled || !controller.isGrounded || animatedLaunchPending) return false;
         animatedLaunchPending = true;
         return true;
@@ -74,6 +120,13 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Update()
     {
+        if (movementLockOwner)
+        {
+            IsGrounded = controller.enabled && controller.isGrounded;
+            HasMotionSample = true;
+            return;
+        }
+
         var keyboard = Keyboard.current;
         Vector2 input = Vector2.zero;
         bool sprint = false, jump = false;

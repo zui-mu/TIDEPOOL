@@ -40,21 +40,8 @@ namespace TidePool.GiantHand.AutoGrasp
                 return false;
             }
 
-            Vector3 side = Vector3.ProjectOnPlane(
-                rig.rootPosition - capsule.center,
-                capsule.axis
-            );
-
-            if (side.sqrMagnitude < 0.000001f)
-            {
-                side = Vector3.ProjectOnPlane(
-                    settings.preferredSide,
-                    capsule.axis
-                );
-            }
-
-            if (!CapsuleGeometry.IsFinite(side)
-                || side.sqrMagnitude < 0.000001f)
+            if (!TryGetPalmPose(capsule, rig.rootPosition, settings.preferredSide, settings.palmGap,
+                    out Pose finalPalm, out Vector3 side))
             {
                 message = "无法确定接近胶囊的侧向方向。";
                 return false;
@@ -66,18 +53,6 @@ namespace TidePool.GiantHand.AutoGrasp
                 capsule.axis,
                 side
             ).normalized;
-
-            Vector3 finalPalmPosition =
-                capsule.center
-                + side * (
-                    capsule.radius + settings.palmGap
-                );
-
-            Quaternion finalPalmRotation =
-                Quaternion.LookRotation(
-                    -side,
-                    capsule.axis
-                );
 
             float reachProgress = Mathf.SmoothStep(
                 0f,
@@ -93,13 +68,13 @@ namespace TidePool.GiantHand.AutoGrasp
 
             output.palmPosition = Vector3.Lerp(
                 rig.startPalmPosition,
-                finalPalmPosition,
+                finalPalm.position,
                 reachProgress
             );
 
             output.palmRotation = Quaternion.Slerp(
                 rig.startPalmRotation,
-                finalPalmRotation,
+                finalPalm.rotation,
                 reachProgress
             );
 
@@ -171,6 +146,37 @@ namespace TidePool.GiantHand.AutoGrasp
             }
 
             message = "抓取目标已生成，尚未进行 IK 求解。";
+            return true;
+        }
+
+        internal static bool TryGetPalmPose(CapsuleSnapshot capsule, Vector3 shoulder, Vector3 preferredSide,
+            float gap, out Pose palm, out Vector3 side)
+        {
+            palm = default;
+            side = Vector3.ProjectOnPlane(shoulder - capsule.center, capsule.axis);
+            if (side.sqrMagnitude < 0.000001f)
+                side = Vector3.ProjectOnPlane(preferredSide, capsule.axis);
+
+            if (!CapsuleGeometry.IsValid(capsule) || !CapsuleGeometry.IsFinite(side) ||
+                side.sqrMagnitude < 0.000001f || !CapsuleGeometry.IsFinite(gap) || gap < 0f)
+                return false;
+
+            side.Normalize();
+            palm = new Pose(capsule.center + (capsule.radius + gap) * side,
+                Quaternion.LookRotation(-side, capsule.axis));
+            return true;
+        }
+
+        public static bool TryGetFingertipTarget(CapsuleSnapshot capsule, Vector3 radialDirection,
+            float axialHeight, float tipRadius, out Vector3 target)
+        {
+            target = Vector3.zero;
+            if (!CapsuleGeometry.IsFinite(tipRadius) || tipRadius < 0f ||
+                !CapsuleGeometry.TrySurfacePoint(capsule, axialHeight, radialDirection,
+                    out Vector3 surface, out Vector3 normal))
+                return false;
+
+            target = surface + tipRadius * normal;
             return true;
         }
     }

@@ -124,7 +124,7 @@ public class JiggleMemoryBus {
     private int currentPersonalColliderTransformAccessIndex = 0;
     private int currentSceneColliderTransformAccessIndex = 0;
 
-    private static List<Transform> dummyTransforms;
+    private static List<Transform> dummyTransforms = new();
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void Init() {

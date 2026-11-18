@@ -6,7 +6,7 @@ using UnityEngine.Profiling;
 namespace GatorDragonGames.JigglePhysics {
 
 public static class JigglePhysics {
-    private static Dictionary<Transform, JiggleTreeSegment> jiggleRootLookup;
+    private static Dictionary<Transform, JiggleTreeSegment> jiggleRootLookup = new();
     private static bool _globalDirty = true;
     private static readonly List<Transform> tempTransforms = new ();
     private static readonly List<Vector3> tempRestLocalPositions = new ();

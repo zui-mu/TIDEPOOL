@@ -14,9 +14,11 @@ namespace TidePool.GiantHand.Editor
             CheckWristPalmRoundTrip();
             CheckPalmRollKeepsPole();
             CheckGeneratedWristTarget();
+            CheckFingertipTargets();
+            CheckMovementLockOwnership();
             CheckCircularArc();
             CheckCircularArmDriver();
-            Debug.Log("GiantHand math checks passed: FK, wrist/palm, grasp target, circular arc, arm driver.");
+            Debug.Log("GiantHand math checks passed: FK, wrist/palm, grasp target, movement lock, circular arc, arm driver.");
         }
 
         private static void CheckForwardKinematics()
@@ -124,6 +126,59 @@ namespace TidePool.GiantHand.Editor
             finally
             {
                 UnityEngine.Object.DestroyImmediate(fixture);
+            }
+        }
+
+        private static void CheckFingertipTargets()
+        {
+            var capsule = new CapsuleSnapshot
+            {
+                center = new Vector3(2f, 1f, 3f),
+                axis = Vector3.up,
+                radius = 0.28f,
+                height = 1.62f
+            };
+            if (!GraspTargetGenerator.TryGetFingertipTarget(capsule, Vector3.left, 0.35f, 0.06f, out Vector3 thumb) ||
+                !GraspTargetGenerator.TryGetFingertipTarget(capsule, Vector3.right, 0.2f, 0.06f, out Vector3 opposing) ||
+                !GraspTargetGenerator.TryGetFingertipTarget(capsule, Vector3.forward, 0.81f, 0.06f, out Vector3 top))
+                throw new InvalidOperationException("Valid fingertip targets were rejected.");
+            ExpectVector(new Vector3(1.66f, 1.35f, 3f), thumb, "Thumb on the near side");
+            ExpectVector(new Vector3(2.34f, 1.2f, 3f), opposing, "Opposing finger at its own height");
+            ExpectVector(new Vector3(2f, 1.87f, 3f), top, "Tip pad follows the top cap normal");
+            if (GraspTargetGenerator.TryGetFingertipTarget(capsule, Vector3.up, 0f, 0.06f, out _))
+                throw new InvalidOperationException("Contact accepted an axis with no horizontal direction.");
+        }
+
+        private static void CheckMovementLockOwnership()
+        {
+            GameObject player = new GameObject("Grab lock check") { hideFlags = HideFlags.HideAndDontSave };
+            try
+            {
+                CharacterController capsule = player.AddComponent<CharacterController>();
+                var movement = player.AddComponent<PlayerMovement>();
+                typeof(PlayerMovement).GetMethod("Awake",
+                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                    .Invoke(movement, null);
+
+                if (!movement.TryLockMovement(player) || !movement.IsMovementLockedBy(player))
+                    throw new InvalidOperationException("Grasp owner could not lock a valid player.");
+                if (movement.TryLockMovement(capsule))
+                    throw new InvalidOperationException("A second owner took another grasp's movement lock.");
+                movement.ReleaseMovementLock(capsule);
+                if (!movement.IsMovementLockedBy(player))
+                    throw new InvalidOperationException("A second owner released another grasp's movement lock.");
+                movement.ReleaseMovementLock(player);
+                if (!movement.TryLockMovement(capsule))
+                    throw new InvalidOperationException("Player could not be locked again after release.");
+                typeof(PlayerMovement).GetMethod("OnDisable",
+                    System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                    .Invoke(movement, null);
+                if (movement.IsMovementLockedBy(capsule))
+                    throw new InvalidOperationException("Disabling movement retained the grasp lock.");
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(player);
             }
         }
 

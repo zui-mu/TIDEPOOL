@@ -25,11 +25,29 @@ namespace TidePool.GiantHand
         public float WristError => wristError;
         public float MaxBoneLengthError => maxBoneLengthError;
         public bool IsSolved { get; private set; }
+        internal bool DrivenExternally { get; set; }
 
         private Pose[] worldPoses = Array.Empty<Pose>();
         private Quaternion? lastBendPlane;
 
-        private void LateUpdate() => Refresh();
+        private void LateUpdate()
+        {
+            if (!DrivenExternally)
+                Refresh();
+        }
+
+        internal bool IsWristReachable(Vector3 target)
+        {
+            if (ValidateChain(out float segmentLength) != null)
+                return false;
+
+            int segmentCount = joints.Length - 1;
+            float reach = segmentCount * segmentLength;
+            float distance = Vector3.Distance(joints[0].position, target);
+            return segmentCount == 1
+                ? Mathf.Abs(distance - reach) <= 0.00001f * reach
+                : distance <= reach;
+        }
 
         public bool Refresh()
         {

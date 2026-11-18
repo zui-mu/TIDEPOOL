@@ -37,6 +37,8 @@ namespace TidePool.GiantHand
         private Vector3 bendDirection;
         private bool holdingDirection;
 
+        internal bool DrivenExternally { get; set; }
+
         private void OnEnable()
         {
             lastUpdateTime = Time.realtimeSinceStartupAsDouble;
@@ -46,6 +48,9 @@ namespace TidePool.GiantHand
 
         private void LateUpdate()
         {
+            if (DrivenExternally)
+                return;
+
             double now = Time.realtimeSinceStartupAsDouble;
             float elapsed = Mathf.Clamp((float)(now - lastUpdateTime), 0f, 0.05f);
             lastUpdateTime = now;
@@ -80,6 +85,14 @@ namespace TidePool.GiantHand
                 wrist.position = reachableWrist;
             }
 
+            return TryApplyWristGoal(wrist, elapsed);
+        }
+
+        internal bool TryApplyWristGoal(Pose wrist, float elapsed)
+        {
+            if (!HasValidBindings())
+                return false;
+
             Vector3 chord = wrist.position - armRoot.position;
             float lengthSquared = chord.sqrMagnitude;
             if (float.IsNaN(lengthSquared) || float.IsInfinity(lengthSquared))
@@ -93,7 +106,7 @@ namespace TidePool.GiantHand
                 wristTarget.SetPositionAndRotation(wrist.position, wrist.rotation);
 
             if (lengthSquared <= PositionToleranceSquared)
-                return false;
+                return true;
 
             float length = Mathf.Sqrt(lengthSquared);
             Vector3 axis = chord / length;

@@ -197,11 +197,17 @@ public sealed class GirlPlayerAnimation : MonoBehaviour, IPlayerJumpHandler
             Quaternion target = Quaternion.LookRotation(velocity, Vector3.up);
             visualRoot.rotation = Quaternion.RotateTowards(visualRoot.rotation, target, turnSpeed * Time.deltaTime);
         }
-        airborneTime = movement.IsGrounded ? 0f : airborneTime + Time.deltaTime;
-        bool stableGrounded = movement.IsGrounded || (airborneTime < .07f && movement.VerticalSpeed < .5f);
+        bool carried = movement.IsMovementLocked;
+        airborneTime = movement.IsGrounded || carried ? 0f : airborneTime + Time.deltaTime;
+        bool stableGrounded = movement.IsGrounded || carried || (airborneTime < .07f && movement.VerticalSpeed < .5f);
         animator.SetFloat(MoveSpeed, speed < .035f ? 0f : speed, animationDamping, Time.deltaTime);
         animator.SetBool(Grounded, stableGrounded);
         animator.SetFloat(VerticalSpeed, movement.VerticalSpeed);
+        if (carried)
+        {
+            if (danceActive) SetDanceActive(false);
+            return;
+        }
         if (Time.deltaTime <= 0f) return;
         UpdateDance(speed);
         switch (jumpPhase)

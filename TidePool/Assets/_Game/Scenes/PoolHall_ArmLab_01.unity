@@ -30685,6 +30685,7 @@ GameObject:
   - component: {fileID: 1455186527}
   - component: {fileID: 1455186528}
   - component: {fileID: 1955200103}
+  - component: {fileID: 910100001}
   m_Layer: 0
   m_Name: GiantHand_Controls
   m_TagString: Untagged
@@ -30708,6 +30709,7 @@ Transform:
   - {fileID: 1082262628}
   - {fileID: 1749757895}
   - {fileID: 1955200102}
+  - {fileID: 910100003}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &1455186528
@@ -30732,6 +30734,100 @@ MonoBehaviour:
   - {fileID: 1532494759}
   - {fileID: 1144974600}
   - {fileID: 1131543610}
+--- !u!114 &910100001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455186526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95d0d65996de5ed43b1f12e3089ede9d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TidePool.GiantHand.AutoGrasp.GraspController
+  palmControl: {fileID: 1955200103}
+  arm: {fileID: 437412943}
+  shoulder: {fileID: 2042317135}
+  wrist: {fileID: 197104414}
+  restWristTarget: {fileID: 910100003}
+  playerCapsule: {fileID: 1934700915}
+  playerMovement: {fileID: 1934700914}
+  fingers:
+  - {fileID: 349883304}
+  - {fileID: 359371579}
+  - {fileID: 1532494760}
+  - {fileID: 1144974601}
+  - {fileID: 1131543612}
+  sampleInterval: 3
+  reachTime: 2
+  wrapTime: 2.8
+  liftTime: 0.75
+  holdTime: 1
+  lowerTime: 1.2
+  openTime: 2.4
+  returnTime: 1.8
+  restTime: 0.75
+  wristOffset: {x: -2.7506708, y: 1.1463002, z: 2.162512}
+  wristOrientation: {x: 0.4074683, y: 0.23628461, z: 0.10598806, w: 0.8757315}
+  preGraspOffset: {x: 0, y: 1.5, z: 0}
+  contactOffsets:
+  - {x: 40, y: 0.75, z: 0.070316456}
+  - {x: 90, y: 0.3, z: 0.040292293}
+  - {x: 120, y: -0.05, z: 0.10708918}
+  - {x: 150, y: -0.4, z: 0.32414743}
+  - {x: -90, y: 0.25, z: 0.050274946}
+  fingerSeeds:
+  - {x: 46.446964, y: -85.37347, z: -83.79033, w: -53.79449}
+  - {x: 37.81679, y: -67.57704, z: -84.8521, w: -71.25075}
+  - {x: 4.2049007, y: -47.258614, z: -102.574265, w: -22.034426}
+  - {x: -40.885647, y: -84.86488, z: -45.741703, w: -12.37757}
+  - {x: -80.17938, y: -48.136166, z: -18.098854, w: -26.643696}
+  fingerRadius: 0.038
+  fingerTolerance: 0.025
+  floorClearance: 0.04
+  liftHeight: 0.5
+  phase: 0
+  outcome: Waiting for Play mode
+  fingerContacts: 0
+  fingertipErrors:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  lastLiftDistance: 0
+--- !u!1 &910100002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 910100003}
+  m_Layer: 0
+  m_Name: RestWristTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &910100003
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910100002}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: -0.34202018, w: 0.9396926}
+  m_LocalPosition: {x: 37.5, y: -5.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1455186527}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1465638925
 GameObject:
   m_ObjectHideFlags: 0

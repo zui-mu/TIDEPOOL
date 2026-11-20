@@ -1,19 +1,45 @@
-# Girl twin-braid dynamics
+---
+id: tidepool-hair
+type: submodule-design
+title: 双辫子 Jiggle 动态与绑定
+status: draft
+parent: tidepool-girl
+references: [tidepool-jiggle, tidepool-player]
+tags: [animation, hair]
+---
 
-## Approved intent
-The user selected custom bone springs and approved the detailed implementation outline in the conversation. Implement natural, restrained secondary motion using the existing eight weighted braid bones. Preserve the authored hairstyle, body animation, jump behavior, collision ownership and source FBX/weights.
+# 双辫子动态与 Jiggle 适配
 
-## Design
-- Attach GirlHairDynamics to the ArmLab Player/GirlVisual instance. Two chains Head→Hair_Left/Right_1→2→3→4 plus a measured virtual tip. Pin root positions, preserve bone translations/scales and rest twist, drive rotations after Animator and existing shoulder correctives.
-- Keep animation reference rotations separate from last-frame physics; restore reference before Animator, sample current reference afterwards. Never recache physics as the rest hairstyle.
-- Use bounded substeps, damped shape springs, relative head-motion acceleration and gravity, then iterative length/bend/capsule constraints. Cache references/arrays. Handle zero delta, long frames, large teleports and enable/disable without stale impulses.
-- Use data-only body sphere/capsule proxies attached to Head/Neck/Chest/upper-arm transforms, not game physics colliders or additional bone hierarchy objects. First release prioritizes head/shoulder avoidance. No hair/hair collision, wind or underwater drag.
-- Add MotionReset notification to PlayerMovement.ResetMotion; request hair reset and rebuild on the next post-animation update at the final teleported pose. Current PoolWaterCycle already calls ResetMotion before teleporting.
-- Editor setup auto-binds missing references, measures virtual tips/radii from actual skinned geometry where available, draws debug geometry, checks configuration and saves only the clean active ArmLab scene. Check/expand hair renderer bounds on the instance.
-- Initial tuning: stronger roots/softer ends, root cone about18 degrees, tip cone about35 degrees, moderately damped, strength0.75. Tune from actual walking/stopping/turning/jump/landing captures; no claim of perfect collision or strand-level deformation with four bones.
+## 已确认设计与替代关系
 
-## Files
-New Runtime/GirlHairDynamics.cs and GirlHairCollisionProxy.cs; Editor/GirlHairDynamicsEditor.cs and GirlHairDynamicsRegression.cs, with Unity.meta files, under Assets/_Game/Characters/GirlV06. Modify PlayerMovement only for the reset notification, current ArmLab scene for component/config, and integration notes. Source model, weights and animation assets remain unchanged.
+原文是 2026-11-06 的自写骨簧设计。后续 [Jiggle 接入记录](../plans/2026-11-07-jiggle-integration.md) 明确批准使用固定 v16.0.1 上游 JiggleJobs，保留 FBX、蒙皮和玩家运动，不重新实现求解器。本轮用户要求复用该文并承认已知限制，故原地修订；旧计划保留为历史，不继续作为另一份现行规范。
 
-## Verification
-Observe baseline failure before production code. Deterministic real-Transform tests cover motion response, fixed roots/lengths, settling,30/60/120fps, zero/long frames, reset and degenerate collision geometry. Observe scene-component failure before installation. Play the actual character through walk/stop/run/jump/turn/reset and record close-up frames and quantitative motion/penetration metrics. Rerun existing23 jump cases and26 integration checks, inspect visual proof, confirm clean stopped editor and request independent code review before completing.
+目标是已有双辫的自然重力下垂和动作响应；可见运动前应完成静止预热，重置清除旧惯性。不追求逐发丝模拟或物理碰撞代理绝对无穿插。
+
+## 绑定与写入范围
+
+使用 Head→Hair_Left／Right_1..4 的八根加权骨骼及测量得到的虚拟发梢。保留骨骼局部位移、缩放、源 FBX 与权重；适配器在动画和肩部修形后写发骨旋转。骨骼和头发仍会随角色发生世界位移；本规范不决定整个角色的位移驱动方式。
+
+当前 ArmLab 的 GirlJiggleHair 是唯一发骨求解适配器；GirlHairDynamics 禁用但保留链、半径和身体代理等绑定资料。旧求解器的 Root/Tip Frequency 等参数和实测响应不解释当前 Jiggle 效果，两个求解器不得同时写发骨。
+
+身体球／胶囊代理从头、颈、胸、上臂等骨骼变换得到，只服务头发，不向游戏物理注册 Collider／Rigidbody，不接管角色胶囊。运行时临时末端节点用于让最后一段参与上游碰撞，重建时先移除旧节点，避免扫描重复。
+
+## 求解器与生命周期边界
+
+GirlJiggleHair 使用自己的 JiggleJobs 实例及其释放队列，先完成作业再释放内存；不能把独立树生命周期交给无关全局拥有者。上游及补丁边界见 [tidepool-jiggle](../../../sources/JigglePhysics/SPEC.md)，不在第一方复制积分与碰撞算法。
+
+当前适配使用固定 1/60 秒步长、每帧最多 0.1 秒，库约束每积分步请求四轮；参数由组件／场景保存。预热与重置的时间轴独立于游戏 Time，不为头发暂停或推进整场景。
+
+PlayerMovement.MotionReset 只发出重置信号；头发在下一次动画更新后、最终传送位置重建历史，不在旧位置缓存新静止姿态。暂停、长帧、大位移、改绑、禁用／重启都应避免残余冲量；关闭时恢复临时 Renderer 包围盒和适配器修改的姿态状态。
+
+## 保留的选择理由与排除项
+
+复用现有八根骨骼和上游求解器，避免改源资产或维护第二套积分器。身体代理是粗略近似，四骨链与扁宽发束在极端姿态下仍可能穿插；未承诺发辫互撞、整条手臂碰撞、风或水下阻力。
+
+库支持的特性不等于角色实例已启用或验证的特性；旧自写弹簧的 1.8 cm 响应、18／35 度参数和全部通过记录仅属于旧实现。
+
+## 验证与证据效力
+
+验证实际 rig 的根附着、固定段长、重力下垂、动作响应、重置、帧率与成本；数值与近景画面分别检查。旧自写弹簧核心检查不能替代当前 Jiggle 实机采集。
+
+[2026-11-07 快照](../../backups/2026-11-07-jiggle-snapshot.md) 保留了 14/15 通过、身体代理净空失败的结果；不能改写成“头发碰撞全部通过”。本轮未重新运行 Unity，不对现版本作新的通过声明。工具及报告路径见 [测试指南](../../testing.md)。

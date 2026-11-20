@@ -25,6 +25,6 @@ tags: [third-party, water, urp]
 
 上游文档入口为 [Documentation~/index.md](Documentation~/index.md)，新功能说明以 Markdown 为准，旧 PDF 不替代当前源码。包内原文保留其上游身份；本文件只拥有 TidePool 的集成边界，不重写整套第三方手册。
 
-[Tests/README.md](Tests/README.md) 描述确定性 PlayMode 契约测试，不覆盖 GPU、URP 画面和异步 readback 的全部行为。当前项目 manifest **没有 testables 声明**，与该 README 的声称不同；测试发现需要在对应 Unity 环境核实，本轮不修改依赖配置或宣称套件已通过。
+[Tests/README.md](Tests/README.md) 描述确定性 PlayMode 契约测试，不覆盖 GPU、URP 画面和异步 readback 的全部行为。当前项目 manifest **没有 testables 声明**；该 README 关于测试自动发现的旧说法已更正，发现情况仍需在对应 Unity 环境核实。本轮不修改依赖配置或宣称套件已通过。
 
 部分示例（如 WaterSplashRange）仍读取旧 Input API，而本工程启用新版输入；不能把全部包样例列为已兼容。第一方主场景与上游样例应分别验证。

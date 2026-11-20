@@ -1,23 +1,33 @@
-# Input-selected moving jump
+---
+id: tidepool-moving-jump
+type: submodule-design
+title: 移动跳分类与缓冲
+status: draft
+parent: tidepool-jump
+tags: [animation, jump]
+---
 
-The user approved backing up the current project to GitHub, then implementing the discussed moving-jump rule. Backup 204c370 is verified on origin/codex/backup-before-moving-jump-20261106.
+# 移动跳分类与缓冲
 
-## Behavior
+## 已确认规则
 
-- On an accepted grounded Space press, latch moving jump when the net WASD input vector is nonzero. Opposing keys cancel. Shift affects speed only. Classification uses input intent, not measured speed.
-- A stationary jump retains the existing grounded preparation/recovery restrictions. A moving jump retains ordinary acceleration, braking and steering throughout Preparing, AwaitingTakeoff, Airborne and Recovery. Releasing input does not change jump type.
-- Keep the current horizontal velocity state; do not zero it for a moving jump, add a second inherited velocity or force a fixed speed. Existing acceleration and air input behavior remain.
-- CharacterController.Move remains the single displacement/collision owner. Walls constrain real displacement, including diagonal sliding, without cancelling the vertical jump or accumulating an additional launch impulse.
-- Losing ground before physical takeoff cancels the pending launch and enters Falling. No coyote time, invisible support or air jump is introduced.
-- Preserve the full original 0..50 jump, frame19 takeoff, frame25 apex, frame30 contact and complete recovery. No animation clipping, retiming, root-motion changes or new motion assets.
-- Clear the latched type on cancellation, reset and normal completion. Preserve Animator-disabled fallback behavior and the existing reset/disable/ceiling/ledge regressions.
+文档体系重建访谈中，用户明确认可当前规则，取代原文“按 WASD 输入意图锁定全程类型、保留完整移动跳准备／恢复”的约定。保留旧文件名以维持引用；名称中的 input 不再代表现行分类依据。
 
-## Approach and limitations
+- 接受跳跃时，有有效运动样本且实际水平速度 **大于 0.2 m/s** 才判为移动跳；Shift 只改变目标速度，不直接决定类型。
+- 同时从静止按 W＋Space 不保证立即归为移动跳；顶墙后有输入但实际速度为零也不保证归为移动跳。不能用旧输入分类断言判定此规则失败。
+- 请求分类在准备／腾空阶段不因松键随意切换，但实际接地时按当时水平速度重新判定恢复类型；不再保证整轮类型完全锁定。
+- 默认移动准备为起跳前 3 帧，即源帧 16→19；移动落地恢复为接触后 5 帧，即 30→35。它们是可配置播放区间，不剪裁或替换源 Girl_Jump 动画资产。
+- 原地跳仍完整准备／恢复；移动跳继续普通加减速、制动和转向，不额外叠加第二份继承速度、不强制恒速。实际碰撞会约束位移，不能把“保持运动能力”说成“撞墙也保持实际速度”。
+- 准备中跑出边缘，取消待起跳并进入下落；不引入隐形支撑、空中跳或额外冲量。取消、重置和完成清理分类状态。
 
-Choose one latched moving flag in GirlPlayerAnimation, passed from PlayerMovement through IPlayerJumpHandler.HandleJumpRequest(bool hasMovementInput). Keep PlayerMovement responsible for velocity; avoid a parallel momentum controller. Actual-speed classification was considered but does not implement the user's W+Space-from-rest rule. Replacing the source animation could improve moving foot contact but is a separate asset change; this implementation must expose the actual visual result for review.
+## 边界与理由
 
-The existing approximately0.63-second anticipation remains. Running over an edge before it completes intentionally becomes a fall. Translating planted anticipation/recovery may show foot sliding; numerical checks cannot establish visual naturalness.
+缩短移动跳两端缓冲减少移动中的迟滞；完整站定素材在平移时仍可能滑步，数值通过不证明画面自然。原地跳保留完整阶段，是不同使用情形，不是把全片统一加速。
 
-## Verification
+物理起跳确认、独立时钟和回退规则继承 tidepool-jump；本节点不决定长期世界位移驱动选型，也不复制父节点的阶段机。
 
-Add moving-jump integration cases to the existing real-character runner in a separate partial file. First run held-running continuity against unchanged production and observe the forced-zero failure. Then run the complete stationary/flight/interruption suite plus running/walking, simultaneous W+Space, opposing keys/late input, input release/resume, wall blocking/sliding, moving support loss, and reset-to-stationary. Capture a continuous moving-jump preview. No persistent scene saves during tests.
+## 实现与验证限制
+
+GirlPlayerAnimation 当前忽略 HandleJumpRequest 的 hasMovementInput 参数来进行分类，实际采用 PlanarVelocity；参数仍存在不代表输入意图契约仍有效。恢复在 BeginRecovery 重判，默认帧数由场景／组件配置决定。
+
+旧专项回归中的 W＋Space、晚输入、类型锁定与完整恢复断言需要按现规则核对，不能只引用旧 23 用例通过。验证应覆盖已有速度起跳、静止同时输入、顶墙、松键／恢复、接地重判、跑出边缘及重置，再检查连续预览。本轮仅修文档，没有运行或修订这些测试。

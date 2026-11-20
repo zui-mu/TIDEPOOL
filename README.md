@@ -1,45 +1,84 @@
-# TIDEPOOL
+# TidePool
 
-Unity project for TidePool, including the pool hall scene, water rendering assets, and GiantHand arm IK / finger FK controls.
+基于 Unity 的可解释骨骼 FK／IK／Shape IK 课程研究工程。池厅、玩家、巨手与水体是数学演示的宿主，不以完整商业游戏为验收标准。
 
-## Open the project
+**设计事实源是 Spec，不是代码现状或旧测试报告。** 本轮 Spec 均为待审阅的 `draft`；未实现要求与未决事项已明确区分。
 
-1. Install Unity **6000.6.7f1** through Unity Hub.
-2. Install Git and Git LFS, then run `git lfs install`.
-3. Clone this repository and, if needed, run `git lfs pull`.
-4. In Unity Hub, add the **TidePool/** folder (the repository root is one level above the Unity project).
-5. Let Unity restore packages and regenerate the Library folder.
-6. Open `Assets/_Game/Scenes/PoolHall_ArmLab_01.unity` to inspect the giant hand prototype.
+## 从哪里开始
 
-## Repository contents
+- [目标与需求](goal-and-requirements.md)：项目目的、范围、能力与非目标。
+- [系统架构](architecture.md)：系统边界、依赖与设计变更规则。
+- [文档与 Spec 索引](docs/README.md)：模块树、已采纳设计与历史资料。
+- [贡献指南](CONTRIBUTING.md)：分支、Git／LFS、资产提交和验证约定。
+- [AGENTS.md](AGENTS.md)：代理必须遵守的执行规则。
+- [测试指南](docs/testing.md)：检查入口、输出、副作用与已知验证缺口。
 
-- `TidePool/Assets/`: scenes, scripts, materials, assets, and their `.meta` files.
-- `TidePool/Packages/`: package manifests and embedded packages.
-- `TidePool/ProjectSettings/`: Unity project configuration.
-- Existing project documentation, development files, and backup scenes are preserved.
+## 克隆与打开
 
-Unity caches, temporary files, logs, per-user settings, and generated IDE project files are excluded by `.gitignore`. Binary art/audio/model files use Git LFS. Scene, prefab, script, and metadata files remain normal Git files.
-
-## Save changes
-
-From the repository root:
+需要 Git、Git LFS 和 Unity Hub。编辑器版本以 [ProjectVersion.txt](TidePool/ProjectSettings/ProjectVersion.txt) 为准，当前 **6000.6.7f1**。
 
 ```sh
-git status
-git add .
-git commit -m "Describe your changes"
-git push
+git lfs install
+git clone <仓库地址>
+cd <克隆后的仓库目录>
+git lfs pull
 ```
 
-Commit asset `.meta` files together with the assets so that Unity GUID references stay intact. Close Unity or wait for scene and asset saves to finish before making a commit. Before working on another computer, run `git pull` and `git lfs pull`.
+1. Unity Hub 添加仓库内的 **`TidePool/`**，不是仓库根目录。
+2. 等待 Unity 恢复包并重新生成 Library；不要把旧电脑的 Library 当作迁移必需品。
+3. 打开 `Assets/_Game/Scenes/PoolHall_ArmLab_01.unity`，它是当前唯一启用的构建场景。
+4. 先核对 Console，再进入 Play。数学实验可另开 `Assets/_Game/Scenes/GiantHand_ArcLab_01.unity`。
 
-## Restore after cloning or reinstalling Windows
+必须克隆**整个仓库**：`sources/JigglePhysics` 是运行时本地 UPM 依赖。水包嵌入在 `TidePool/Packages/com.abstractocclusion.webgpuwater`，保持项目相对路径；不要换成 Asset Store 下载缓存或旧电脑的绝对路径。
 
-- Open `TidePool/` in Unity Hub, not the repository root. Use the version recorded in `TidePool/ProjectSettings/ProjectVersion.txt` (currently 6000.6.7f1).
-- Run `git lfs install` and `git lfs pull` in the repository root so model and texture files contain the actual binary content.
-- The water system is already embedded at `TidePool/Packages/com.abstractocclusion.webgpuwater/`. Its lock-file source is `embedded`, using the project-relative path `file:com.abstractocclusion.webgpuwater`; do not replace it with an old computer's absolute download/cache path.
-- Unity restores registry dependencies from `Packages/manifest.json` and regenerates `Library/`. Asset Store download-cache folders are not runtime resource paths for this project.
-- Open `Assets/_Game/Scenes/PoolHall_ArmLab_01.unity`. This is the player/giant-hand scene and is the configured startup scene. `Untitled` and `SampleScene` do not contain that gameplay setup.
-- The embedded water package includes a Unity 6.6 EntityId compatibility fix. Preserve these source changes when moving or updating the project.
-- On an x64 Windows installation, if Bee reports `HostPlatform architecture detection failure []`, verify the **system-level** environment variable `PROCESSOR_ARCHITECTURE` is `AMD64`. This editor's Bee reads Machine scope; a project `.env.local` or process-only value does not replace it.
-- The existing `Tools > Girl V06 > 6 - Test integrated player` command verifies the saved ArmLab scene in Play mode. It writes its report under `TidePool/Development/character_integration/` and exits Play when finished.
+## 当前演示操作
+
+ArmLab 的当前输入直接使用新版 Input System：
+
+- WASD 移动，左 Shift 跑步，Space 跳跃。
+- 按住鼠标右键转相机，滚轮缩放。
+- 靠近控制点按 E 排水，池底拾取信件后触发上涨；阅读界面按其提示操作。
+- R 重置水位演示及玩家位置。
+- T 在接地静止且控制器支持时切换 Salsa；移动／跳跃／被抓会终止。
+- 巨手按周期尝试五指捏取，检查通过后抬升并放回；玩家走开允许本轮失败，不保证持续追踪。
+
+角色当前移动跳已缩短准备／恢复，头发采用 Jiggle。更精确的行为与研究完成范围请读对应 Spec，不能仅凭演示能运行就认定课程要求已全部达成。
+
+## 仓库边界
+
+- `TidePool/Assets/`：Unity 运行资产、场景与第一方脚本；资产和 `.meta` 一起维护。
+- `TidePool/Packages/`、`TidePool/ProjectSettings/`：包源码／解析清单及工程设置。
+- `sources/`：原始资源和来源；其中 JigglePhysics 是正式本地依赖。
+- `docs/`、根目标／架构文档、各模块 `SPEC.md`：设计、协作与验证说明。
+- `TidePool/Development/`、`TidePool/HallExpansionBackups/`、`work/`、根 `Temp/`：保留的开发证据／历史文件，不等于 Unity 缓存，不拖入 Assets。
+
+Unity 生成缓存、本机配置及精确列出的工具通信文件由 `.gitignore` 排除。已跟踪历史文件不会因新增 ignore 自动停止跟踪；本轮不做批量清理或 LFS 历史迁移。
+
+## 检查与保存
+
+在 Unity 中可运行 `Tools > GiantHand > Run Math Checks` 或 `Tools > Girl V06 > 4 - Check project assets`。其他菜单可能进入 Play、模拟输入或保存场景，先阅读 [测试指南](docs/testing.md)，不要把安装菜单当成只读检查。
+
+提交前：
+
+```sh
+git status --short
+git diff --check
+git diff --stat
+# 确认 Unity 保存完毕，再按实际范围添加文件
+git add <本次修改的文件或目录>
+git commit -m "docs: describe the documentation change"
+```
+
+功能／修复使用对应提交类型，不直接照抄 docs 示例。分支必须采用 `<类型>/<小写英文短横线描述>`；禁止 `codex/`、`claude/`、`Claude/` 等代理／模型名前缀，完整规则见 [贡献指南](CONTRIBUTING.md#分支命名)。
+
+## 换电脑与排障
+
+- 资源若只有 LFS 指针文本，先运行 `git lfs pull`；丢失 `.meta` 会破坏 GUID 引用，不能靠重新导入随意重建。
+- 水包和 Jiggle 带有 Unity 6.6 兼容补丁，更新依赖时先阅读各自 Spec 与补丁记录，不能用原包覆盖本地修改。
+- `Untitled`／`SampleScene` 不包含完整主控和巨手，不作为主场景恢复失败的依据。
+- 在 x64 Windows 上遇到 Bee `HostPlatform architecture detection failure []`，检查**系统级** `PROCESSOR_ARCHITECTURE=AMD64`；项目 `.env.local` 不替代 Machine scope。不要在其他架构的机器上照抄这个值。
+- 历史 PASS 不是当前复验；已知课程缺口、头发净空失败和旧回归偏差见 [测试指南](docs/testing.md)。
+
+## 来源与许可
+
+本仓库包含第三方资产与包，各自许可证／来源记录继续适用，见 [sources](sources/README.md) 和各包目录。本文件不为整个项目新增统一开源许可。AI 辅助与学生独立验证的边界见研究 Spec。

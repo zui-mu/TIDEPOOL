@@ -1,5 +1,7 @@
 # Input-selected moving jump Implementation Plan
 
+> 历史实施记录，不是当前执行授权；[tidepool-moving-jump](../specs/2026-11-06-moving-jump-input-design.md) 已明确采用速度分类和缩短缓冲。下文输入锁定方案、旧分支名与测试结果仅属于当时，新分支遵守根协作指南。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Preserve continuous horizontal movement when Space is accepted with net directional input, while retaining the existing stationary jump.

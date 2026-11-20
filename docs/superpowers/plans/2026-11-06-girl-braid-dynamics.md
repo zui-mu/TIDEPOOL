@@ -1,5 +1,7 @@
 # Girl braid dynamics Implementation Plan
 
+> 历史实施记录：自写弹簧已被 Jiggle 替代，现行契约见 [tidepool-hair](../specs/2026-11-06-girl-braid-dynamics-design.md)。下文任务、分支名和约束仅代表当时，不是当前执行授权；新工作遵守根协作指南。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans task-by-task. Steps use checkbox syntax.
 
 **Goal:** Add restrained twin-braid secondary motion using the existing eight weighted bones.

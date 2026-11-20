@@ -1,32 +1,44 @@
-# Full jump sequence and physical takeoff
+---
+id: tidepool-jump
+type: submodule-design
+title: 完整跳跃与物理起跳
+status: draft
+parent: tidepool-girl
+references: [tidepool-player]
+tags: [animation, jump]
+---
 
-## Approved intent
+# 完整跳跃与物理起跳
 
-The user approved repairing the complete jump control flow after rejecting the cropped-animation workaround. Preserve the full `Girl_Jump` (frames 0..50 at 30 fps). Space starts grounded anticipation; physical takeoff happens at the authored launch; rising/apex/falling poses follow physical flight; actual contact starts complete landing recovery before locomotion. The approximately 0.63 s anticipation delay was explicitly explained and accepted. Do not crop, reverse, or replace the source animation.
+## 设计依据与已确认变更
 
-## Evidence
+原 2026-11-06 设计要求修复动作阶段归属，而不是用截取腾空片段掩盖问题。文档体系重建时用户明确认可当前实际速度分类及缩短移动跳准备／恢复规则；细节唯一归 [tidepool-moving-jump](2026-11-06-moving-jump-input-design.md)。原地跳仍使用完整准备／恢复，源 Girl_Jump 素材保持 0..50 帧、30 fps。
 
-The original runtime was forward: 34 unblended knee-pose samples matched forward sampling with 0.000261 degree RMS error, versus 42.044 degrees against reverse sampling. The defect is phase ownership: original physical apex at 0.333 s coincided with source frame 9.5 (anticipation), and contact at 0.683 s with source frame 20 (takeoff). The reverted excerpt workaround introduced a 54-degree first-frame knee change and compressed landing recovery into 0.08 s.
+本文件原地采纳为 draft，不把旧测试记录或当前代码当作额外设计批准。
 
-## Approach and alternatives
+## 非显然的选择与历史证据
 
-Choose physics-owned displacement with a full-clip animation clock. Root motion driving collision displacement would change the existing jump height/physics and gameplay ownership. Speeding/cropping the whole clip does not repair launch and contact ownership and was rejected. A single common time parameter for outgoing air and incoming landing would jump both poses on early contact; separate full-clip clocks preserve the outgoing pose during a blend.
+原缺陷是物理最高点已到而动画仍在准备段、接地时动画刚到起跳段。旧记录中，正向采样膝部误差远小于反向采样，不能据最初投诉就认定动作被反放。撤回的截取方案又引入了明显接缝。
 
-## Responsibilities
+因此保留同一个完整源片段，用物理阶段驱动不同动画时钟：不是整体加速，也不是反放。上述诊断来自当时记录，不代表本轮重新测得。已撤回方案见 [历史说明](2026-11-06-jump-air-animation-design.md)，不作为现行修复建议。
 
-- `PlayerMovement` remains the only owner of CharacterController.Move, gravity, and launch velocity. An optional registered jump handler consumes requests and queues one launch; scenes without a compatible handler keep their original immediate jump.
-- `GirlPlayerAnimation` owns preparation/awaiting-launch/flight/recovery. Preparation advances the original clip at native rate up to frame 19. Hold there until movement acknowledges an actually applied launch.
-- During flight, actual vertical speed maps monotonically from frame 19 to frame 25 at apex and then toward frame 30 at first contact. A long fall holds a suitable end-air pose until real contact.
-- Landing uses the same full clip with a separate `LandingTime` clock from frame 30 through frame 50. The outgoing flight clock freezes at contact, so early contact blends from its actual current pose rather than jumping its time.
-- Walking off an edge uses a separate `Falling` state/clock, also referencing the full clip, starting near apex. This permits blending from anticipation/recovery without moving the outgoing clock backwards.
-- Use fixed 0.1 s entry/air-contact/fall blends and 0.12 s recovery-to-locomotion blends, subject to actual visual verification. Do not use Grounded alone to finish the full sequence.
-- Grounded preparation and recovery suppress horizontal movement, because this is a planted-foot standing jump; air steering stays available. This is an implementation decision to prevent the complete standing animation sliding over the floor.
-- Reset, disabled movement, and disabled animation cancel pending launches. Pool reset explicitly clears movement/sequence together; wait for a new movement sample before inferring a fall. Invalid or disabled animation infrastructure leaves base movement usable.
+## 阶段契约
 
-## Scope
+- GirlPlayerAnimation 管理 Preparing、AwaitingTakeoff、Airborne、Recovery；玩家移动模块确认是否真正施加了一次冲量。请求动画开始不等于已经腾空。
+- 准备按源帧率走到 frame 19；排队一次起跳并等待 JumpLaunchSequence 改变。桥接无效的其他场景保留即时跳跃回退，不因为缺动画而完全失去移动。
+- 腾空根据实际竖直速度从起跳 frame 19 单调映射到最高点 frame 25，再到接触附近 frame 30；长下落保持合适空中姿态。
+- 真实接地启动独立 LandingTime；离地或撞顶使用独立 Falling／FallTime。切换时保留离开状态的时钟，避免混合双方共享一个时间而跳姿势。
+- 原地跳完成 frame 30..50 恢复后才回到走跑，准备／恢复抑制地面水平运动；移动跳的播放区间和运动规则由子规范决定。Grounded 不能独自表示整段动画结束。
+- 重置、取消、移动／动画禁用清除待起跳与阶段；不得在恢复后重放过期请求。获得新运动样本后才推断跌落。
 
-Production changes: movement/animation bridge, their controller, and a minimal reset hook in PoolWaterCycle. Keep scene references, Avatar, water behavior, source clip, 1.2 m configured jump height, -20 m/s² gravity, and unrelated dirty work intact. No commits or publishing.
+## 当前适配与尚未决定
 
-## Verification
+当前 PlayerMovement 拥有 CharacterController.Move、重力与冲量，桥接通过 IPlayerJumpHandler 注册、排队并等待确认，Animator 关闭 Root Motion。**用户明确将长期代码／Root Motion／混合选型留待后续模块深入，不把此现状写成永久排他要求。**
 
-Run the new real-component regression against old production first and observe failure because the player is airborne during anticipation. Then verify one launch after the authored anticipation, physical apex near source frame 25, no backwards clock movement, contact and full recovery to frame 50, repeated/running jump, blocked takeoff/ceiling, reset/disable cancellation and unanimated fallback. Run existing integration checks with an elapsed-time completion check. Inspect generated whole-sequence visual evidence; passing numeric assertions alone is insufficient to call motion natural.
+当前模板使用约 0.1 秒入场／接地／跌落混合、0.12 秒恢复到 locomotion；视觉自然度仍需看连续画面。走跑跳的源素材不重写，速度、碰撞和动作时钟应分别核对。
+
+## 验证与已知偏差
+
+检查一次请求只对应一次实际起跳、最高点姿态、独立接地时钟、重置／禁用／撞顶／掉边／桥接失效。原地完整片段与移动缩短区间分别验收，不能继续对所有跳跃要求完整准备／恢复。
+
+旧回归可能仍断言按输入分类或完整 frame 50 恢复，安装／重建分支也可能生成旧控制器；保留失败并记录偏差，本轮不修改测试以制造通过。操作入口见 [测试指南](../../testing.md)。

@@ -1,5 +1,7 @@
 # Jump air animation correction
 
+> 历史已撤回方案，不纳入现行 Spec 图；当前规范见 [tidepool-jump](2026-11-06-full-jump-sequence-design.md)。下文保留原记录，不作为重新实施截取方案的授权。
+
 **Reverted after visual regression feedback.** The excerpt and shorter blends made transitions abrupt. The original full Girl_Jump reference, speed 1, and 0.1/0.12 s blends have been restored. Prior timing/integration checks did not validate visual continuity or establish the original reverse-playback complaint's root cause. This proposal is historical, not an approved future fix.
 
 The user approved the previously described minimal fix: retain immediate, code-driven Space jumping and replace the full jump in AirborneHold with a dedicated airborne excerpt. The original full Girl_Jump remains available. Anticipation and a separate landing state are outside this change.

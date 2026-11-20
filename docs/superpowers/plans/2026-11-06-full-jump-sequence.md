@@ -1,5 +1,7 @@
 # Full Jump Sequence Implementation Plan
 
+> 历史实施记录，不是当前执行授权；现行阶段契约见 [tidepool-jump](../specs/2026-11-06-full-jump-sequence-design.md)，移动跳已有独立的缩短缓冲规则。下文检查结果与禁止提交等指令仅属于当时任务。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
 **Goal:** Preserve the full jump while aligning physical launch, airborne poses, contact, and recovery.

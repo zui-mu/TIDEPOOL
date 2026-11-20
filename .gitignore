@@ -35,7 +35,37 @@ Desktop.ini
 *.p12
 *.keystore
 *.jks
-# Preserve Assets, all .meta files, Packages and ProjectSettings.
+# Preserve project source Assets/.meta, Packages and ProjectSettings.
+# In particular, do not ignore sources/, Development/, work/ or root Temp/.
+# Already tracked historical files stay tracked even when a pattern below matches.
+
+# ThinkRail workspace-local state (not project documentation)
+/.thinkrail/
+
+# Transient editor command/request channels; never replay on another machine.
+/TidePool/Development/unity_hall_expansion/unity-command.txt
+/TidePool/Development/unity_hall_expansion/dream-command.txt
+/TidePool/Development/unity_monument/command.txt
+/TidePool/Development/unity_pool_lighting/command.txt
+/TidePool/Development/unity_water_cycle/command.txt
+/TidePool/Development/unity_water_cycle/camera-command.txt
+/TidePool/Development/unity_water_cycle/letter-command.txt
+/TidePool/Development/unity_water_cycle/polish-command.txt
+/TidePool/Development/character_integration/command.txt
+/TidePool/Development/character_validation/check-import.request
+
+# Regenerated editor readiness/health signals (existing snapshots are not untracked).
+/TidePool/Development/unity_hall_expansion/dream-ready.txt
+/TidePool/Development/unity_hall_expansion/capture-requested.txt
+/TidePool/Development/unity_monument/ready.txt
+/TidePool/Development/unity_monument/shader-status.txt
+/TidePool/Development/unity_pool_lighting/ready.txt
+/TidePool/Development/unity_water_cycle/ready.txt
+/TidePool/Development/unity_water_cycle/camera-ready.txt
+/TidePool/Development/unity_water_cycle/letter-ready.txt
+/TidePool/Development/unity_water_cycle/polish-ready.txt
+/TidePool/Development/character_integration/status.txt
+/TidePool/Development/Migration/unity-health.txt
 
 # Automatically updated local development status files
 /TidePool/Development/unity_hall_expansion/dream-status.json

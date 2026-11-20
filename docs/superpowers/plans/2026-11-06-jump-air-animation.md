@@ -1,5 +1,7 @@
 # Jump Air Animation Implementation Plan
 
+> 历史已撤回计划，不是执行授权。当前规范为 [tidepool-jump](../specs/2026-11-06-full-jump-sequence-design.md)，不得按下文任务重新安装截取方案。
+
 **Status: reverted.** User video showed abrupt pose transitions. Restore complete Girl_Jump (frames 0..50), speed 1, and original entry/return blends 0.1/0.12 s. The numeric timing checks below are historical and do not establish a visually correct repair or the original issue's root cause. Further work is diagnostic only until evidence supports a cause.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.

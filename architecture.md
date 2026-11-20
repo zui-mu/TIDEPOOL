@@ -49,4 +49,4 @@ flowchart LR
 
 ## 文档维护边界
 
-[文档索引](docs/README.md) 负责导航与历史归类，[AGENTS.md](AGENTS.md) 负责代理执行规则，[CONTRIBUTING.md](CONTRIBUTING.md) 负责分支、提交和验证操作；它们链接 Spec，不复制各模块设计理由。
+[文档索引](docs/README.md) 负责导航与历史归类，[AGENTS.md](AGENTS.md) 负责代理执行规则，[CONTRIBUTING.md](CONTRIBUTING.md) 负责分支、提交、PR 正文和验证操作；它们链接 Spec，不复制各模块设计理由。

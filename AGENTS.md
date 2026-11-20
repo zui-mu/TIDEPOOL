@@ -30,6 +30,10 @@
 
 先看 git status，保留用户已有修改；只提交本任务文件，不运行破坏性的 reset／clean 或历史重写。提交类型遵循现有 `feat:`／`fix:`／`docs:` 等风格。未经要求不推送、合并或发布。
 
+## PR 正文
+
+创建或更新 PR 时必须遵循 [CONTRIBUTING 的四段正文结构](CONTRIBUTING.md#pr-正文结构)，使用 [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md) 的顺序和标题。自动摘要／计划先映射到这四段，不直接采用工具默认正文；验证结果放在可观测结果段，截图可选，收益和风险都要说明。推送／提 PR 的授权不包含合并授权。
+
 ## 验证与报告
 
 按 [测试指南](docs/testing.md) 选检查。工具可能自动写状态、模拟输入、进入 Play 或保存场景；安装与检查必须区分，不在用户未保存场景上盲目运行。

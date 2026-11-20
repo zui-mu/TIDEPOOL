@@ -34,7 +34,7 @@
 ## 操作与协作入口
 
 - [README](../README.md)：克隆、打开工程、当前演示操作。
-- [CONTRIBUTING](../CONTRIBUTING.md)：分支命名、提交、LFS、忽略与证据规则。
+- [CONTRIBUTING](../CONTRIBUTING.md)：分支命名、提交、四段 PR 正文、LFS、忽略与证据规则；[GitHub PR 模板](../.github/PULL_REQUEST_TEMPLATE.md) 固定正文结构。
 - [AGENTS](../AGENTS.md)：代理执行边界与反向提问规则。
 - [测试指南](testing.md)：实际工具入口、运行副作用与验证缺口。
 - [Development 说明](../TidePool/Development/README.md)：输出、历史脚本与迁移记录。

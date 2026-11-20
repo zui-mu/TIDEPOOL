@@ -4,7 +4,7 @@ type: submodule-design
 status: draft
 title: 自动抓取与几何检查
 parent: tidepool-gianthand
-depends-on: [tidepool-gianthand-rig, tidepool-player]
+depends-on: [tidepool-gianthand-rig, tidepool-player, tidepool-gianthand-math]
 tags: [grasp, geometry]
 ---
 

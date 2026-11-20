@@ -1,5 +1,7 @@
 # Jiggle Physics integration plan
 
+> 历史批准来源与实施记录；现行绑定／生命周期规范已归 [tidepool-hair](../specs/2026-11-06-girl-braid-dynamics-design.md)。下文待办和验证账本保留当时状态，不等于当前版本通过，也不是重新安装的授权。
+
 Approved design: use Jiggle Physics 16.0.1 for the existing eight braid bones. Preserve the character FBX, skinning and movement. Natural gravity-settled resting hair is required before visible movement. Run after shoulder corrections; reset must clear prior inertia.
 
 - [x] Preserve the existing scene and package manifest; retain MIT license and pinned source archive SHA256.

@@ -3,8 +3,11 @@
 The Runtime suite is intentionally deterministic: it validates the C# feature contracts without
 depending on a graphics driver, asynchronous GPU readback, or a particular URP renderer setup.
 
-Run it from Unity's Test Runner with **PlayMode** selected. The package is declared in the root
-`testables` list, so the assembly appears as `AbstractOcclusion.WebGpuWater.Tests`.
+Use Unity's Test Runner with **PlayMode** selected. The test assembly is named
+`AbstractOcclusion.WebGpuWater.Tests`. This TidePool checkout does not currently declare a root
+`testables` list; verify discovery in the project's Unity version before claiming the suite ran.
+Adding or changing test-discovery configuration is a separate configuration change. See the
+package's [TidePool integration Spec](../SPEC.md) and the [project testing guide](../../../../docs/testing.md).
 
 Coverage is grouped by feature rather than by implementation file:
 

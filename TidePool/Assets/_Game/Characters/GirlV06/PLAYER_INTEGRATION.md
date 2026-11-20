@@ -1,5 +1,7 @@
 # 女孩主控接入记录（2026-10-30）
 
+> **按日期保留的历史接入与实测记录，不是现行规范。** 当前设计见 [角色 Spec](SPEC.md) 及其跳跃／头发节点，测试入口见 [测试指南](../../../../../docs/testing.md)。文档重建时已确认移动跳采用实际速度分类和缩短缓冲，发辫采用 Jiggle；当前 Build Settings 已以 ArmLab 为唯一启用场景。下文旧的输入分类、完整移动跳时长、相机距离和“Build Settings 未切换”等描述只代表当时版本，旧 PASS 不证明当前版本通过。
+
 接入场景：Assets/_Game/Scenes/PoolHall_ArmLab_01.unity。
 打开该场景并进入 Play：WASD 移动，左 Shift 跑步，Space 跳跃，按住鼠标右键转动相机；原有 E 交互、R 重置继续由原场景控制。
 

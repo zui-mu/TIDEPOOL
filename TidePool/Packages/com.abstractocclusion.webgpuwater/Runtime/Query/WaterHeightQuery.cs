@@ -15,6 +15,25 @@ namespace AbstractOcclusion.WebGpuWater
     {
         readonly Dictionary<int, WaterSample[]> _resultsByOwner = new Dictionary<int, WaterSample[]>();
 
+#if UNITY_6000_6_OR_NEWER
+        // Keep complete IDs as keys: different EntityIds can have the same integer hash.
+        readonly Dictionary<UnityEngine.EntityId, WaterSample[]> _resultsByEntity =
+            new Dictionary<UnityEngine.EntityId, WaterSample[]>();
+
+        public WaterSample[] RentResults(UnityEngine.EntityId ownerId, int count)
+        {
+            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
+            if (!_resultsByEntity.TryGetValue(ownerId, out WaterSample[] buffer) || buffer.Length < count)
+            {
+                buffer = new WaterSample[count];
+                _resultsByEntity[ownerId] = buffer;
+            }
+            return buffer;
+        }
+
+        public void Release(UnityEngine.EntityId ownerId) => _resultsByEntity.Remove(ownerId);
+#endif
+
         /// <summary>A results buffer of at least <paramref name="count"/> for <paramref name="ownerId"/>,
         /// reused across frames and grown when the count rises. Use a stable id (e.g. GetInstanceID()).</summary>
         public WaterSample[] RentResults(int ownerId, int count)
@@ -35,6 +54,12 @@ namespace AbstractOcclusion.WebGpuWater
         /// Fast Enter Play Mode (domain reload off) a static registrar survives between sessions, so
         /// without this the map keeps buffers keyed by the previous session's instance ids - ids that
         /// are never reissued and whose owners will never call Release.</summary>
-        internal void Clear() => _resultsByOwner.Clear();
+        internal void Clear()
+        {
+            _resultsByOwner.Clear();
+#if UNITY_6000_6_OR_NEWER
+            _resultsByEntity.Clear();
+#endif
+        }
     }
 }

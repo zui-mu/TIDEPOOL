@@ -1,0 +1,97 @@
+<div id="reflection-angle-diagram">
+  <h3>关于一条直线的镜像反射</h3>
+  <div id="reflection-angle-plot"></div>
+  <div class="text-small">方向角的统一起点：+X 轴，逆时针为正</div>
+</div>
+<style>
+#reflection-angle-diagram { color: var(--foreground); display: grid; gap: calc(var(--font-size-base) * 0.5); }
+#reflection-angle-diagram h3 { padding-right: 90px; }
+#reflection-angle-diagram svg { display: block; width: 100%; overflow: visible; }
+#reflection-angle-diagram svg text { fill: var(--foreground); font-family: inherit; font-size: var(--font-size-base); font-weight: 400; }
+</style>
+<script>
+(() => {
+  const root = document.getElementById('reflection-angle-diagram');
+  const plot = root.querySelector('#reflection-angle-plot');
+  const ns = 'http://www.w3.org/2000/svg';
+  function draw() {
+    const width = Math.max(280, Math.round(plot.getBoundingClientRect().width));
+    const ox = 25;
+    const radius = Math.min(460, (width - 125) / Math.cos(Math.PI / 9));
+    const oy = radius * Math.sin(2 * Math.PI / 9) + 67;
+    const height = Math.ceil(oy + 48);
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', '初始向量的方向角为20度，反射线的方向角为30度，反射后向量的方向角为40度。两个向量分居反射线两侧，各相差10度。三个方向角都从固定的正X轴开始计量。');
+    function add(tag, attrs, value) {
+      const el = document.createElementNS(ns, tag);
+      for (const [key, val] of Object.entries(attrs || {})) el.setAttribute(key, val);
+      if (value !== undefined) el.textContent = value;
+      svg.appendChild(el);
+      return el;
+    }
+    function point(angle, distance) {
+      const a = angle * Math.PI / 180;
+      return [ox + distance * Math.cos(a), oy - distance * Math.sin(a)];
+    }
+    function segment(a, b, stroke, extra = {}) {
+      return add('line', {x1:a[0], y1:a[1], x2:b[0], y2:b[1], stroke, 'stroke-width':1.5, ...extra});
+    }
+    function label(x, y, content, attrs = {}) {
+      return add('text', {x, y, ...attrs}, content);
+    }
+    function arrow(angle, color) {
+      const end = point(angle, radius);
+      segment([ox, oy], end, color, {'stroke-width':2.5});
+      const a = angle * Math.PI / 180;
+      const length = 10;
+      const halfWidth = 4;
+      const back = [end[0] - length * Math.cos(a), end[1] + length * Math.sin(a)];
+      const left = [back[0] + halfWidth * Math.sin(a), back[1] + halfWidth * Math.cos(a)];
+      const right = [back[0] - halfWidth * Math.sin(a), back[1] - halfWidth * Math.cos(a)];
+      add('polygon', {points:[end,left,right].map(p => p.join(',')).join(' '), fill:color});
+      return end;
+    }
+    function arc(from, to, distance, color, lineWidth = 1.5) {
+      const pts = [];
+      for (let a = from; a <= to + 0.001; a += 0.5) pts.push(point(a, distance));
+      const d = pts.map((p,i) => `${i ? 'L' : 'M'} ${p[0]} ${p[1]}`).join(' ');
+      add('path', {d, fill:'none', stroke:color, 'stroke-width':lineWidth});
+    }
+    const foreground = 'var(--foreground)';
+    const initialColor = 'var(--viz-series-1)';
+    const reflectedColor = 'var(--viz-series-2)';
+    segment([ox - 10, oy], [width - 15, oy], foreground, {'stroke-opacity':0.5});
+    add('polygon', {points:`${width-15},${oy} ${width-23},${oy-3} ${width-23},${oy+3}`, fill:foreground, 'fill-opacity':0.5});
+    label(width - 18, oy + 24, '+X', {'text-anchor':'end'});
+    label(ox - 5, oy + 23, 'O');
+    segment(point(30, -22), point(30, radius * 1.04), foreground, {'stroke-dasharray':'6 5', 'stroke-opacity':0.65});
+    const initialTip = arrow(20, initialColor);
+    const reflectedTip = arrow(40, reflectedColor);
+    const mirrorTip = point(30, radius);
+    label(reflectedTip[0] + 10, reflectedTip[1] - 14, '反射后');
+    label(reflectedTip[0] + 10, reflectedTip[1] + 4, 'γ₁ = 40°');
+    label(mirrorTip[0] + 12, mirrorTip[1] - 2, '反射线');
+    label(mirrorTip[0] + 12, mirrorTip[1] + 16, 'α = 30°');
+    label(initialTip[0] + 10, initialTip[1] + 8, '初始');
+    label(initialTip[0] + 10, initialTip[1] + 26, 'β = 20°');
+    const arcRadius = radius * 0.70;
+    arc(20, 30, arcRadius, initialColor, 2);
+    arc(30, 40, arcRadius, reflectedColor, 2);
+    const firstGap = point(25, arcRadius + 27);
+    const secondGap = point(35, arcRadius + 27);
+    label(firstGap[0], firstGap[1] + 7, '10°', {'text-anchor':'middle'});
+    label(secondGap[0], secondGap[1] - 5, '10°', {'text-anchor':'middle'});
+    arc(0, 20, Math.min(65, radius * 0.30), initialColor);
+    const betaLabel = point(10, Math.min(65, radius * 0.30) + 20);
+    label(betaLabel[0], betaLabel[1] + 5, '20°');
+    add('circle', {cx:ox, cy:oy, r:3, fill:foreground});
+    plot.replaceChildren(svg);
+  }
+  draw();
+  new ResizeObserver(draw).observe(plot);
+})();
+</script>

@@ -387,7 +387,12 @@ namespace AbstractOcclusion.WebGpuWater
                 else needRipples = true;
             }
 
+#if UNITY_6000_6_OR_NEWER
+            // SampleHeights accepts a caller hash; this is not used as an identity/cache key.
+            int owner = GetEntityId().GetHashCode();
+#else
             int owner = GetInstanceID();
+#endif
             if (needRipples)
                 body.SampleHeights(owner, 0f, _worldPoints, _rippleSamples, TriggerFields, excludeInteractiveRipples: false);
             if (needAnalytic)

@@ -10,9 +10,17 @@ namespace TidePool.GiantHand.AutoGrasp
             out CapsuleSnapshot snapshot,
             out string message)
         {
+            return TryCapture(source, out snapshot, out message);
+        }
+
+        internal static bool TryCapture(
+            CharacterController source,
+            out CapsuleSnapshot snapshot,
+            out string message)
+        {
             snapshot = default;
 
-            if (source == null)
+            if (source == null || !source.enabled || !source.gameObject.activeInHierarchy)
             {
                 message = "尚未指定玩家的 Character Controller。";
                 return false;

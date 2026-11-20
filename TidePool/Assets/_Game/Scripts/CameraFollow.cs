@@ -10,6 +10,12 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private float mouseSensitivity = .15f;
     [SerializeField] private float minPitch = 5f;
     [SerializeField] private float maxPitch = 75f;
+    [Header("Scroll zoom")]
+    [SerializeField] private bool enableScrollZoom;
+    [SerializeField, Min(1.1f)] private float minZoomDistance = 1.8f;
+    [SerializeField, Min(1.1f)] private float maxZoomDistance = 7.5f;
+    [SerializeField, Min(.01f)] private float scrollZoomStep = .65f;
+    private float preferredDistance;
     [Header("Camera obstruction")]
     [SerializeField] private LayerMask collisionLayers = Physics.DefaultRaycastLayers;
     [SerializeField,Min(.05f)] private float collisionRadius = .25f;
@@ -29,6 +35,7 @@ public class CameraFollow : MonoBehaviour
     {
         yaw=transform.eulerAngles.y;
         pitch=Mathf.Clamp(Mathf.DeltaAngle(0,transform.eulerAngles.x),minPitch,maxPitch);
+        preferredDistance = distance;
         currentDistance=distance;viewCamera=GetComponent<Camera>();
         if(target)
         {
@@ -50,6 +57,19 @@ public class CameraFollow : MonoBehaviour
             Vector2 delta=mouse.delta.ReadValue();yaw+=delta.x*mouseSensitivity;
             pitch=Mathf.Clamp(pitch-delta.y*mouseSensitivity,minPitch,maxPitch);
         }
+        if (enableScrollZoom && mouse != null)
+        {
+            float scroll = mouse.scroll.ReadValue().y;
+            if (scroll != 0f)
+            {
+                if (Application.platform is RuntimePlatform.WindowsEditor or RuntimePlatform.WindowsPlayer &&
+                    InputSystem.settings.scrollDeltaBehavior == InputSettings.ScrollDeltaBehavior.KeepPlatformSpecificInputRange)
+                    scroll /= 120f;
+                preferredDistance = Mathf.Clamp(preferredDistance - scroll * scrollZoomStep,
+                    minZoomDistance, Mathf.Max(minZoomDistance, maxZoomDistance));
+            }
+        }
+
         Vector3 focus=target.position+Vector3.up*lookHeight;
         Quaternion rotation=Quaternion.Euler(pitch,yaw,0);
         Vector3 direction=rotation*Vector3.back;
@@ -61,21 +81,23 @@ public class CameraFollow : MonoBehaviour
             radius=Mathf.Max(radius,halfHeight*Mathf.Sqrt(1+viewCamera.aspect*viewCamera.aspect)+.025f);
         }
         CollisionRadius=radius;
-        float safeDistance=distance;
-        int count=Physics.SphereCastNonAlloc(focus,radius,direction,hits,distance,collisionLayers,QueryTriggerInteraction.Ignore);
+        float requestedDistance = enableScrollZoom ? preferredDistance : distance;
+        // Check the camera's current position too while it is easing toward a closer zoom.
+        float castDistance = enableScrollZoom ? Mathf.Max(requestedDistance, currentDistance) : requestedDistance;
+        float safeDistance = castDistance;
+        int count=Physics.SphereCastNonAlloc(focus,radius,direction,hits,castDistance,collisionLayers,QueryTriggerInteraction.Ignore);
         RaycastHit[] results=hits;
         if(count==hits.Length)
         {
-            results=Physics.SphereCastAll(focus,radius,direction,distance,collisionLayers,QueryTriggerInteraction.Ignore);
+            results=Physics.SphereCastAll(focus,radius,direction,castDistance,collisionLayers,QueryTriggerInteraction.Ignore);
             count=results.Length;
         }
         for(int i=0;i<count;i++)
             if(IsCameraObstacle(results[i].collider))safeDistance=Mathf.Min(safeDistance,Mathf.Max(0,results[i].distance-wallPadding));
-        IsObstructed=safeDistance<distance-.01f;
-        // Pull in immediately so rapid orbit input cannot move the lens through a wall.
-        // Only the return to the preferred distance is damped.
+        IsObstructed = safeDistance < requestedDistance - .01f;
+        // Obstructions pull the camera in immediately. Intentional zoom and recovery ease in.
         if(safeDistance<currentDistance){currentDistance=safeDistance;recoveryVelocity=0;}
-        else currentDistance=Mathf.SmoothDamp(currentDistance,safeDistance,ref recoveryVelocity,recoveryTime);
+        else currentDistance=Mathf.SmoothDamp(currentDistance,Mathf.Min(requestedDistance,safeDistance),ref recoveryVelocity,recoveryTime);
         currentDistance=Mathf.Min(currentDistance,safeDistance);
         transform.SetPositionAndRotation(focus+direction*currentDistance,rotation);
         SetHidden(currentDistance<1.05f);

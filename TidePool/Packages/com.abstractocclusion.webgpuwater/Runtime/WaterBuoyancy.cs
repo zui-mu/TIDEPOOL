@@ -119,7 +119,14 @@ namespace AbstractOcclusion.WebGpuWater
                 Debug.LogWarning("WaterBuoyancy: no WaterVolume in the scene; object will not float.");
         }
 
-        void OnDestroy() => SharedQuery.Release(GetInstanceID());
+        void OnDestroy()
+        {
+#if UNITY_6000_6_OR_NEWER
+            SharedQuery.Release(GetEntityId());
+#else
+            SharedQuery.Release(GetInstanceID());
+#endif
+        }
 
         void BuildSamplePoints()
         {
@@ -199,10 +206,16 @@ namespace AbstractOcclusion.WebGpuWater
             BuildWorldPoints();
             // ONE batched surface query for every point (height + normal + velocity), through the water
             // height seam. objectWidth becomes the ripple LOD cut-off (0 = full spectrum). The results buffer
-            // is rented per-owner (GetInstanceID is stable + unique) so there is no per-frame allocation.
+            // is rented per-owner using the full object ID, so there is no per-frame allocation.
+#if UNITY_6000_6_OR_NEWER
+            var ownerId = GetEntityId();
+            int ownerHash = ownerId.GetHashCode();
+#else
             int ownerId = GetInstanceID();
+            int ownerHash = ownerId;
+#endif
             _results = SharedQuery.RentResults(ownerId, _worldPoints.Length);
-            _body.SampleHeights(ownerId, objectWidth, _worldPoints, _results,
+            _body.SampleHeights(ownerHash, objectWidth, _worldPoints, _results,
                                 WaterQueryFields.HeightNormalVelocity, ignoreInteractiveRipples);
 
             float gravity = Physics.gravity.magnitude;

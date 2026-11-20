@@ -1,5 +1,23 @@
 # 检查与验证指南
 
+## GitHub Actions
+
+每次推送工作分支会运行 `Repository rules`，PR 编辑正文也会重新检查。面向 `main` 的 PR 和 `main` 的推送会在基础检查通过后运行 `Unity compilation and regressions`。PR 校验 GitHub 生成的试合并结果，便于在合入前发现两条分支之间的冲突。检查范围见 [Unity 工程 Spec](../TidePool/SPEC.md#验证边界)。
+
+GitHub 托管的 Windows 机器按工程版本和 revision 安装官方签名的编辑器，检出完整仓库和 LFS 实体。维护者在仓库 **Settings → Secrets and variables → Actions** 配置 CI 账号的 `UNITY_EMAIL`、`UNITY_PASSWORD` 和一个许可证来源：支持命令行激活的 `UNITY_SERIAL`，或 GameCI 所述、包含 DeveloperData 的 Hub ULF 全文 `UNITY_LICENSE`。可用性取决于许可证类型和剩余席位。请使用仓库 Secret 表单录入这些值。签出凭据仅用于拉取；授权与归还阶段的日志留在临时机器上。Fork PR 无法使用本仓库的 Secret，缺少配置会让 Unity 检查明确失败。[Unity 命令行授权](https://docs.unity.com/en-us/engine/6000.3/manual/get-started/install-and-upgrade/licenses-and-activation/managing-your-unity-license) · [GameCI 许可证说明](https://game.ci/docs/github/activation/)
+
+本地可在仓库根用以下命令复现。在独立检出执行 Unity 套件，它会打开正式场景并刷新已有角色报告。`UNITY_EDITOR` 应指向本机已激活的编辑器可执行文件。
+
+```sh
+node --test scripts/ci/check-repository.test.mjs
+node scripts/ci/check-repository.mjs --base origin/main --head HEAD --branch ci/add-repository-and-unity-checks
+node scripts/ci/run-unity.mjs
+```
+
+分支名请替换为实际名称，核对 PR 正文时加 `--body-file <正文文件>`。每次 Unity 运行将新日志和本次生成的 JSON 放在 `TidePool/Logs/ci/run-*/`，云端保留七天。水位回归在正式池厅模拟 E 排水和拾信、Esc 结束阅读、R 复位，长时间的水位变化通过游戏已有的推进方法加速。角色动作、碰撞、读取信件期间的水位变化和输入响应由 Play Mode 验证。
+
+批处理运行期间临时关闭编辑器的启动搜索索引，以避免新检出中空索引干扰 Play 回归；结束时恢复本地搜索设置。若多个 PR 同时争用一个 Unity 席位，可在上一轮归还后重跑失败的作业。
+
 ## 先区分检查的含义
 
 静态文档／源码核对、Unity 编译、确定性数学、真实 Play、画面检查和课程批量评测是不同层次。历史 PASS 只证明对应版本；报告须记录场景、编辑器、配置、运行入口与失败，不能只写“全部通过”。

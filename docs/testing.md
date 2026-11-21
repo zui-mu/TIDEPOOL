@@ -64,6 +64,8 @@ mkdir -p TidePool/Logs
 
 替换 executeMethod 可运行 `GirlPlayerIntegrationTest.RunBatch` 或 `GirlJumpSequenceRegression.RunBatch`，日志也分别命名。这些方法自行管理退出码；如长时间无结果，检查日志，不无限重复启动多个编辑器。
 
+`BathhouseFlowCheck.RunBatch` 从第一关验证入口关闭和开放的水位阶段，并走入第二关。`BathhouseFlowCheck.RunDirectBatch` 单独打开第二关，检查角色、镜头、行走和房间碰撞。两者使用图形设备，完成后退出，并在 `TidePool/Logs/Bathhouse/` 保存第三人称游戏画面与室内全景。
+
 巨手同步检查也可由 `-executeMethod TidePool.GiantHand.Editor.GiantHandMathChecks.Run` 调用；该方法只抛断言／写日志，没有同类 Play 完成退出协议，自动化调用需单独检查日志和退出行为，不能混用上述测试的通过判据。
 
 ## 水包与水流程

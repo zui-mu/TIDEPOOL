@@ -76,7 +76,7 @@ git commit -m "docs: describe the documentation change"
 
 - 资源若只有 LFS 指针文本，先运行 `git lfs pull`；丢失 `.meta` 会破坏 GUID 引用，不能靠重新导入随意重建。
 - 水包和 Jiggle 带有 Unity 6.6 兼容补丁，更新依赖时先阅读各自 Spec 与补丁记录，不能用原包覆盖本地修改。
-- `Untitled`／`SampleScene` 不包含完整主控和巨手，不作为主场景恢复失败的依据。
+- 如果编辑器显示 `Untitled` 空场景，在 Project 窗口双击 `Assets/_Game/Scenes/PoolHall_ArmLab_01.unity` 即可打开泳池首关。
 - 在 x64 Windows 上遇到 Bee `HostPlatform architecture detection failure []`，检查**系统级** `PROCESSOR_ARCHITECTURE=AMD64`；项目 `.env.local` 不替代 Machine scope。不要在其他架构的机器上照抄这个值。
 - 历史 PASS 不是当前复验；已知课程缺口、头发净空失败和旧回归偏差见 [测试指南](docs/testing.md)。
 

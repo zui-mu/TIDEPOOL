@@ -12,7 +12,7 @@ tags: [player]
 
 ## 职责与当前实现
 
-PlayerMovement 处理键盘移动、加减速、重力、实际碰撞位移与运动状态；CameraFollow 处理轨道、缩放和避障；PlayerSfx 根据真实运动与水体状态发声。旧 WaterControlSwitch／PoolWetnessController 是部分旧场景的水高与湿润适配，不接管新水流程。
+PlayerMovement 处理键盘移动、加减速、重力、实际碰撞位移与运动状态；CameraFollow 处理轨道、缩放和避障；PlayerSfx 根据真实运动与水体状态发声。泳池首关和恢复场景仍保存旧 WaterControlSwitch／PoolWetnessController 的禁用组件。正式水位流程由 PoolWaterCycle 驱动。
 
 **长期世界位移驱动尚未决定。** 当前由 PlayerMovement 调用 CharacterController.Move；这是实现记录，不是用户已批准的永久排他选型。动画有四肢运动，头发有相对角色的动态，二者都随角色发生世界位移。
 

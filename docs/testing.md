@@ -74,7 +74,7 @@ mkdir -p TidePool/Logs
 
 确定性套件不覆盖全部 GPU、异步回读、URP 画面或输入样例。旧 WaterSplashRange 使用旧 Input API，在当前新版输入设置下有兼容风险；包样例与第一方主场景分开验证。
 
-通用水流程／灯光／相机工具通过 Development 下的精确 command 文件运行并写输出；有些可生成／保存场景。旧 PoolWaterCycleEditor 的“第二次 E 回水”断言不符当前拾信流程，不能当新验收标准；不同场景的洪水高度也不能共用一个旧硬编码断言。
+用 `PoolWaterCycleRegression.RunBatch` 在正式泳池验证排水、拾信、涨水及 R 重置。跨关测试使用上文的 `BathhouseFlowCheck.RunBatch`。旧池厅变体的水位、灯光和相机测试结果保存在 Development 供历史对照。
 
 ## 文档、图与 Git 规则
 

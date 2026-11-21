@@ -34,7 +34,7 @@ tags: [game, composition]
 
 **当前没有巨手完成后触发排水的场景连接。** `PoolWaterCycle` 有 UnityEvent 扩展点不代表已绑定；早期机关学习清单不是联动已实现的证据。新增联动需先确认并更新所属规范。
 
-Park、Expanded、Dream、WaterCycle、Monument 是编辑器生成的场景变体，不是已实现的关卡切换系统。旧 WaterControlSwitch 等组件仍在部分旧场景生效，不能因主场景禁用就删除全局脚本。
+`Scenes` 保留泳池、澡堂两关，以及圆弧实验 `GiantHand_ArcLab_01` 和角色导入验证 `GirlV06_MixamoValidation`。早期五版池厅的制作过程保存在 Git 历史中。恢复场景仍需能加载已有烘焙光照，包括光照贴图和反射探针。
 
 ## 非运行模块
 

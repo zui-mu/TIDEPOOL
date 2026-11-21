@@ -8,36 +8,36 @@ README 是使用入口；Spec 是设计事实源；计划是任务安排；报�
 
 ## 分支命名
 
-新工作分支统一为：
+所有新工作分支统一使用以下格式，适用于手动创建、IDE 创建和代理创建的分支。
 
 ```text
 <类型>/<小写英文短横线描述>
 ```
 
-允许类型：`feat`、`fix`、`docs`、`refactor`、`test`、`chore`、`build`、`ci`、`perf`、`release`、`hotfix`。描述由小写英文字母或数字组成，用单个短横线分隔；不用空格、下划线、额外斜杠或大小写混排。
+- **类型**必须是 `feat`、`fix`、`docs`、`refactor`、`test`、`chore`、`build`、`ci`、`perf`、`release` 或 `hotfix`。按变更目的选择，例如新增功能用 `feat`，修复已有行为用 `fix`，纯文档变更用 `docs`。
+- **描述**使用小写 ASCII 字母和数字，词组之间用一个 `-` 连接。整条分支名只有一个 `/`，禁止空格、下划线、大写字母，以及开头、结尾或连续的短横线。
+- **禁止以代理、模型或工具名作前缀**。例如 `codex/`、`claude/`、`copilot/`、`cursor/`、`gemini/`、`gpt/`、`agent/` 及其大小写变体。直接为工具指定合规名称，或在提交和推送前改名。
 
-等价正则：
+创建、改名和推送前均按此正则检查名称。
 
 ```regex
 ^(feat|fix|docs|refactor|test|chore|build|ci|perf|release|hotfix)/[a-z0-9]+(-[a-z0-9]+)*$
 ```
 
-**禁止使用代理／模型名称作分支前缀**，包括 `codex/`、`claude/`、`Claude/`、`copilot/`、`cursor/`、`gemini/`、`gpt/`、`agent/` 等；不能因执行工具默认生成这类名称而例外。
+- 合法示例有 `fix/giant-hand-water-cycle`、`feat/grasp-debug-view` 和 `docs/clarify-branch-naming`。
+- 非法示例有 `codex/update-docs`、`Claude/fix-jump`、`fix/codex/water-cycle`、`fix/water_cycle` 和 `fix/water--cycle`。
 
-- 合法：`docs/improve-the-project-documentation-system`、`feat/grasp-debug-view`、`fix/jump-recovery`。
-- 非法：`docs/Improve the project documentation system`、`codex/update-docs`、`Claude/fix-jump`。
+`main` 等既有主分支、发布集成分支和历史分支可保留原名。工作分支以本节为准，当前由创建者和审查者检查命名。
 
-现有主／发布集成分支及历史分支不在本次强制重命名范围；规范约束新工作分支。命名检查是仓库约定，本轮未安装 Git hook 或 CI 门禁，不能声称已经自动强制。
-
-开始前检查工作区；有用户修改先确认处理方式，不自动 stash／覆盖：
+开始前检查工作区。有用户修改时先确认处理方式，禁止自动 stash 或覆盖。以下示例在新分支尚不存在时使用。
 
 ```sh
-git status --short
-git check-ref-format --branch docs/improve-the-project-documentation-system
-git switch -c docs/improve-the-project-documentation-system
+git status --short --branch
+git check-ref-format --branch fix/giant-hand-water-cycle
+git switch -c fix/giant-hand-water-cycle
 ```
 
-示例切换命令只在该分支尚不存在时使用；已有分支用 git switch，不强行覆盖。Git ref 合法不等于符合上述仓库正则。
+已有合规分支用 `git switch <分支名>` 进入。如果当前**本地工作分支**需要更名，校验目标名称后使用 `git branch -m fix/giant-hand-water-cycle`，原提交会随分支保留。`git check-ref-format --branch` 只校验 Git 自身的命名格式，请另按本节正则检查。
 
 ## 提交与审查
 

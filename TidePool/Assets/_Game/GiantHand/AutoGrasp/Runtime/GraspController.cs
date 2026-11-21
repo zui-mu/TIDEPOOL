@@ -191,6 +191,15 @@ namespace TidePool.GiantHand.AutoGrasp
             float dt = Time.deltaTime;
             if (dt <= 0f)
                 return;
+
+            // Reading the pool letter pauses movement without removing the player binding.
+            bool playerCanBeTargeted = playerMovement.isActiveAndEnabled && playerCapsule.enabled;
+            if (!playerCanBeTargeted && phase != Phase.Idle && phase != Phase.Return)
+            {
+                outcome = "Grasp paused: player controls unavailable";
+                BeginReturn();
+            }
+
             double now = Time.timeAsDouble;
             bool sampleDue = now >= nextSample;
             if (sampleDue)
@@ -206,7 +215,7 @@ namespace TidePool.GiantHand.AutoGrasp
                     Pose rest = WorldPose(restWristTarget);
                     if (!clearance.IsClear(rest, solvers, floorY, floorClearance) || !DriveWrist(rest, dt))
                         outcome = "Rest wrist is blocked or out of reach";
-                    else if (sampleDue && now >= readyAt)
+                    else if (playerCanBeTargeted && sampleDue && now >= readyAt)
                         BeginReach();
                     break;
                 case Phase.Reach:
@@ -701,7 +710,7 @@ namespace TidePool.GiantHand.AutoGrasp
         {
             if (!palmControl || !palmControl.isActiveAndEnabled || !arm || !arm.isActiveAndEnabled ||
                 !shoulder || !wrist || !restWristTarget || !playerCapsule || !playerMovement ||
-                !playerMovement.isActiveAndEnabled || playerCapsule.gameObject != playerMovement.gameObject)
+                !playerMovement.gameObject.activeInHierarchy || playerCapsule.gameObject != playerMovement.gameObject)
                 return false;
             if (ownsRig)
             {

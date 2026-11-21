@@ -26,7 +26,7 @@
 
 ## Git 与交付
 
-分支规则唯一完整定义在 [CONTRIBUTING.md](CONTRIBUTING.md#分支命名)：`<类型>/<小写英文短横线描述>`。**禁止以 codex、Claude／claude、copilot、cursor、gemini、gpt、agent 等代理／模型名作为分支前缀。** 当前任务分支为 `docs/improve-the-project-documentation-system`，不得擅自切回旧代理名前缀。
+按 [CONTRIBUTING 的分支命名规则](CONTRIBUTING.md#分支命名) 检查当前工作分支，并为新分支显式指定 `<类型>/<小写英文短横线描述>`。**前缀只能是指南列出的变更类型。禁止使用代理、模型或工具名称作前缀，工具生成的默认名也必须遵守。** 当前工作分支不符合规则时，先按指南更名，再用合规名提交或推送。
 
 先看 git status，保留用户已有修改；只提交本任务文件，不运行破坏性的 reset／clean 或历史重写。提交类型遵循现有 `feat:`／`fix:`／`docs:` 等风格。未经要求不推送、合并或发布。
 

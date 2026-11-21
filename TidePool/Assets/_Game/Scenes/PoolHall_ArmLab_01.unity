@@ -42868,7 +42868,7 @@ MonoBehaviour:
   wristTarget: {fileID: 1749757895}
   elbowPole: {fileID: 1082262628}
   palmCenterInWrist: {x: 2.1, y: 0, z: 0}
-  followPlayer: 1
+  followPlayer: 0
   followOffset: {x: 0, y: 6.4, z: 4}
   playerBody: {fileID: 1934700915}
   circularArm: {fileID: 437412943}

@@ -26,6 +26,6 @@ CeilingSeepage 按流程产生滴水并调用水包 AddRipple；FloodSurfaceStat
 
 ## 参数与验证限制
 
-水位高度来自场景序列化配置，WaterCycle、Monument、ArmLab 不同，不能用一个旧场景的硬编码高度验收全部场景。当前流程通过移动 waterFrame 改水位，不能据此宣称实现了整个房间的流体物理。
+水位高度取自正式泳池的场景配置；验证使用该场景的水位目标值与时长。当前流程通过移动 waterFrame 改变水位。
 
-旧 PoolWaterCycleEditor 有“第二次 E 回水”的断言，与当前拾信流程冲突；这是应修订的测试偏差，不是旧断言仍为设计真相。本次只记录，不更改测试或代码。
+`PoolWaterCycleRegression.RunBatch` 在正式泳池验证排水、拾信、涨水及 R 重置。

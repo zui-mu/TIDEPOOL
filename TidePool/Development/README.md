@@ -14,9 +14,9 @@
 
 ## 工具输出现在如何定位
 
-八个编辑器工具通过 `Assets/_Game/Editor/TidePoolDevelopmentPaths.cs` 定位 `Application.dataPath/../Development`，不再写死 D 盘学习文件夹。以后移动整个项目，也会跟随新项目根目录。
+通用场景截图和快照工具通过 `Assets/_Game/Editor/TidePoolDevelopmentPaths.cs` 定位 `Application.dataPath/../Development`。输出随项目根目录移动。
 
-四个子目录名保持不变，因此旧工具里的 command、截图和记录文件名可以继续沿用。已有历史脚本快照与备份中的 D 盘文字保留作为原始记录，不是当前生效路径。Unity 导入可能生成/更新 ready、status 文件。新通信／状态文件按根 `.gitignore` 的精确路径排除；已有被跟踪的快照仍会显示修改，不会因 ignore 自动停止跟踪。本轮保留它们，不执行删除或取消跟踪。command/request 是会被工具消费的活跃命令，不是可传播的项目配置。
+四个 `unity_*` 子目录保留当年的截图、命令记录和备份。五版旧池厅及其专用生成、灯光和水位工具已退役。现用检查入口见[测试指南](../../docs/testing.md)。仍有消费者的 command/request 文件只用于本机测试。
 
 ## 备份与验证
 

@@ -17,7 +17,7 @@ tags: [unity, integration]
 ## 导入与运行边界
 
 - `Assets/`、`Packages/`、`ProjectSettings/` 以及资产 `.meta` 是工程源；Library、Temp、Logs、UserSettings 等是可再生产物。不能把 Development 或历史备份拖入 Assets。
-- `EditorBuildSettings.asset` 当前只启用 `Assets/_Game/Scenes/PoolHall_ArmLab_01.unity`；其他场景存在不代表已被打包或按运行时关卡顺序加载。
+- 模板默认场景与正式构建的启动场景都指向 `Assets/_Game/Scenes/PoolHall_ArmLab_01.unity`。构建列表的第二项是独立第二关 `Assets/_Game/Scenes/Bathhouse_02.unity`。两关的通行与装配要求由[第一方场景规范](Assets/_Game/SPEC.md#泳池通往公共澡堂)管理。
 - 项目使用 URP 和新版 Input System。当前第一方直接读 `Keyboard.current`／`Mouse.current`；不能假定 `InputSystem_Actions.inputactions` 已接管所有输入，也不能仅凭存在多人相关依赖就宣称支持联网。
 - UPM 声明看 manifest，解析结果看 lock，两者版本字段可能不同；更新依赖时应核对 Unity 实际解析，不根据文档数字擅自降级内置包。
 

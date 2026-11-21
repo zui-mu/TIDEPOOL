@@ -26,7 +26,7 @@ git lfs pull
 
 1. Unity Hub 添加仓库内的 **`TidePool/`**，不是仓库根目录。
 2. 等待 Unity 恢复包并重新生成 Library；不要把旧电脑的 Library 当作迁移必需品。
-3. 打开 `Assets/_Game/Scenes/PoolHall_ArmLab_01.unity`，它是当前唯一启用的构建场景。
+3. 打开首关 `Assets/_Game/Scenes/PoolHall_ArmLab_01.unity`。要直接试玩公共澡堂，可打开同目录的 `Bathhouse_02.unity`。
 4. 先核对 Console，再进入 Play。数学实验可另开 `Assets/_Game/Scenes/GiantHand_ArcLab_01.unity`。
 
 必须克隆**整个仓库**：`sources/JigglePhysics` 是运行时本地 UPM 依赖。水包嵌入在 `TidePool/Packages/com.abstractocclusion.webgpuwater`，保持项目相对路径；不要换成 Asset Store 下载缓存或旧电脑的绝对路径。
@@ -38,6 +38,7 @@ ArmLab 的当前输入直接使用新版 Input System：
 - WASD 移动，左 Shift 跑步，Space 跳跃。
 - 按住鼠标右键转相机，滚轮缩放。
 - 靠近控制点按 E 排水，池底拾取信件后触发上涨；阅读界面按其提示操作。
+- 拾信后，在水位涨满前进入巨手右下方的门洞，沿通廊绕过尽头的挡墙，右转进入公共澡堂。
 - R 重置水位演示及玩家位置。
 - T 在接地静止且控制器支持时切换 Salsa；移动／跳跃／被抓会终止。
 - 巨手按周期尝试五指捏取，检查通过后抬升并放回；玩家走开允许本轮失败，不保证持续追踪。
@@ -75,7 +76,7 @@ git commit -m "docs: describe the documentation change"
 
 - 资源若只有 LFS 指针文本，先运行 `git lfs pull`；丢失 `.meta` 会破坏 GUID 引用，不能靠重新导入随意重建。
 - 水包和 Jiggle 带有 Unity 6.6 兼容补丁，更新依赖时先阅读各自 Spec 与补丁记录，不能用原包覆盖本地修改。
-- `Untitled`／`SampleScene` 不包含完整主控和巨手，不作为主场景恢复失败的依据。
+- 如果编辑器显示 `Untitled` 空场景，在 Project 窗口双击 `Assets/_Game/Scenes/PoolHall_ArmLab_01.unity` 即可打开泳池首关。
 - 在 x64 Windows 上遇到 Bee `HostPlatform architecture detection failure []`，检查**系统级** `PROCESSOR_ARCHITECTURE=AMD64`；项目 `.env.local` 不替代 Machine scope。不要在其他架构的机器上照抄这个值。
 - 历史 PASS 不是当前复验；已知课程缺口、头发净空失败和旧回归偏差见 [测试指南](docs/testing.md)。
 
